@@ -12,11 +12,11 @@ _Professor:_ Flávio Coutinho
 # Aulas
 
 - Aula 1: [Introdução a NoSQL](classes/intro/) (31/08/2015)
-- Aula 2: [Teoria (CAP, _Map/Reduce_, Computação Distribuída)](classes/theory/) (14/09/2015)
-- Aula 3: [_Key-Value databases_](classes/keyvalue/) (21/09/2015)
+- Aula 2: Teoria (CAP, _Map/Reduce_ etc.)[](classes/theory/) (14/09/2015)
+- Aula 3: _Key-Value databases_[](classes/keyvalue/) (21/09/2015)
   - 18:50 - 20:30
   - 20:50 - 22:30: Prática
-- Aula 4: [_Document Stores_](classes/document/) (28/09/2015)
+- Aula 4: _Document Stores_[](classes/document/) (28/09/2015)
   - 18:50 - 20:30
   - 20:50 - 22:30: Prática
 - Aula 5: Seminário e Prova (05/10/2015)
