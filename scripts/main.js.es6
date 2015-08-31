@@ -16,7 +16,7 @@ var bespoke = require('bespoke'),
     sleek = require('./sleek-menu');
 
 // Bespoke.js
-bespoke.from('article', [
+window.deck = bespoke.from('article', [
   fancy(),
   markdown({
     backdrop: function(slide, value) {
@@ -50,16 +50,38 @@ bespoke.from('article', [
         l.href = url;
         placeToPutStyles.appendChild(l);
       });
+    },
+    bespokeEvent: function(slide, events) {
+      setTimeout(function() {
+        events.split(' ').forEach(function(event) {
+          deck.fire(event);
+        });
+      },100);
+    },
+    bespokeState: function(slide, classNames) {
+      slide.setAttribute('data-bespoke-state', classNames);
     }
   }),
   keys(),
+  function() {
+    var deck = arguments[0];
+    document.addEventListener('keydown', function(e) {
+      if ((e.which == 40) || // DOWN
+          (e.which == 38)) { // UP
+        deck.fire('bullets.disable');
+        if (e.which == 40) deck.next();
+        else deck.prev();
+        deck.fire('bullets.enable');
+      }
+    });
+  },
   touch(),
   hash(),
   progress(),
   math(),
   state(),
   backdrop(),
-  bullets('.bespoke-slide:not(.no-bullet) li:not(.no-bullet), .bullet'),
+  bullets('.bespoke-slide:not(.no-bullet) ul:not(.no-bullet) li:not(.no-bullet), .bullet'),
   overview(),
   tutorial(document.getElementsByClassName('tutorial')[0]),
   function() {

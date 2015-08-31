@@ -190,6 +190,16 @@ $book-height = 250px
   &.book-light
     background-color beige
 
+.floating
+  display block
+  animation floating 3s ease-in-out 0ms infinite alternate
+
+@keyframes floating
+  from
+    transform translate3d(0,0,0)
+  to
+    transform translate3d(0, -2em, 0)
+
 
 .layered-paragraph
   background-color rgba(215, 215, 250, 0.5);
@@ -347,6 +357,12 @@ for num in (2..5)
     opacity 1
     transition-delay 800ms
 
+// backdrop + bespoke-overview: should be less visible (low opacity)
+.bespoke-overview
+  .bespoke-backdrop
+    transition-delay 0ms
+    opacity .1
+
 .bespoke-slide[data-bespoke-backdrop]
   z-index 2
 
@@ -361,45 +377,65 @@ full-dimension-backdrop(repeat)
   width 100%
   height 100%
 
-.paradigma-universos.bespoke-backdrop
-  background-image url(../images/paradigma-universos-legenda.png)
+.batman-symbol.bespoke-backdrop-active
+  background-image url(../images/batman-symbol.jpg)
   full-dimension-backdrop(false)
+  background-position-x 100%
+.bespoke-slide[data-bespoke-backdrop="batman-symbol"]
+  h2, p, em
+    color white
 
-.stars.bespoke-backdrop
-  background-image url(../images/stars-bg.png)
-  full-dimension-backdrop(true)
-.bespoke-slide[data-bespoke-backdrop="stars"]
-  color white
+.batman-lego.bespoke-backdrop-active
+  background-image url(../images/batman-lego.png)
+  opacity .4
+  full-dimension-backdrop(false)
+  background-size initial
+  background-position-x 100%
 
-.skybox.bespoke-backdrop-active
-  background-image url(../images/skybox.jpg)
+.attack-of-the-clones.bespoke-backdrop-active
+  background-image url(../images/attack-of-the-clones.jpg)
   full-dimension-backdrop(false)
-.billboarding.bespoke-backdrop-active
-  background-image url(../images/billboarded-trees.jpg)
+  background-position-x 50%
+.types-of-use-of-databases.bespoke-backdrop-active
+  background-image url(../images/types-of-use-of-databases-big.png)
   full-dimension-backdrop(false)
-  background-position-y 100%
+  background-size contain
+  background-position 50% 50%
+  opacity .25
 .particles.bespoke-backdrop-active
   background-image url(../images/sistema-particulas-infamous.jpg)
   full-dimension-backdrop(false)
 .depth-of-field.bespoke-backdrop-active
   background-image url(../images/depth-of-field-unreal.png)
   full-dimension-backdrop(false)
-.bespoke-slide[data-bespoke-backdrop="skybox"],
+.bespoke-slide[data-bespoke-backdrop="batman-symbol"],
+.bespoke-slide[data-bespoke-backdrop="batman-lego"],
+.bespoke-slide[data-bespoke-backdrop="attack-of-the-clones"],
 .bespoke-slide[data-bespoke-backdrop="billboarding"],
 .bespoke-slide[data-bespoke-backdrop="particles"],
 .bespoke-slide[data-bespoke-backdrop="depth-of-field"]
-  background-image linear-gradient(to bottom, rgba(white, .5) 0%, rgba(white,0.15) 100%)
-  border-radius 5px
   h1
-    color #0833BF
+    text-shadow 1px 1px black
 
-.bespoke-slide[data-bespoke-backdrop="billboarding"]
-  h1
-    color #0EB90D
-    text-shadow 2px 2px rgba(0, 0, 0, 0.62)
-.bespoke-slide[data-bespoke-backdrop="particles"]
-  h1
-    color #BFBB08
+.emphatic.bespoke-backdrop
+  transition transform 300ms ease-out 400ms
+  transform translate3d(0, -100%, 0)
+  //width 100%
+  //height 100%
+.emphatic.bespoke-backdrop-active
+  background-image linear-gradient(to bottom, #750000 90%, white 90%)
+  transform translate3d(0, 0, 0)
+  width 100%
+  height 100%
+.bespoke-slide[data-bespoke-backdrop="emphatic"]
+  text-align left
+  display block
+  h1, h2
+    position absolute
+    color white
+    text-align left
+    bottom 1em
+
 
 .raytraced-teapot.bespoke-backdrop-active
   background-image url(../images/raytraced-teapot.jpg)
@@ -478,4 +514,3 @@ full-dimension-backdrop(repeat)
     display none !important
   .book-cover
     height 150px !important
-

@@ -212,4 +212,4 @@ gulp.task('deploy', ['build'], function(done) {
 });
 
 gulp.task('serve', ['connect', 'watch']);
-gulp.task('default', ['build']);
+gulp.task('default', ['serve']);
