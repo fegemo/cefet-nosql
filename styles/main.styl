@@ -72,6 +72,11 @@ body
   overflow hidden
   background-color rgb(255, 213, 213)
 
+pre
+  code
+    box-sizing border-box
+    max-height 500px
+    overflow-x hidden!important
 
 #page-title
   display inline-block
@@ -193,6 +198,8 @@ $book-height = 250px
 .floating
   display block
   animation floating 3s ease-in-out 0ms infinite alternate
+  &:nth-of-type(2n)
+    animation-delay 1s
 
 @keyframes floating
   from
@@ -239,6 +246,33 @@ img[alt$="right"]
 img[alt$="left"]
   float left
 
+
+.note
+  padding 1em
+  margin 0
+  position relative
+  background-color #fe6
+  background-image linear-gradient(#fe6, #f5da41, #f6ef97)
+  font-family 'Mate', serif
+
+  &:before,
+  &:after
+    content: '';
+    display: block;
+    width: 90%;
+    height: 20%;
+    position: absolute;
+    bottom: 3px;
+    background-color: rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    opacity: 1;
+    z-index: -1;
+  &:before
+    left: 10px;
+    transform: rotate(-1deg);
+  &:after
+    right: 10px;
+    transform: rotate(1deg);
 
 /// Tutorial
 $tutorial-right = 20px
@@ -420,8 +454,6 @@ full-dimension-backdrop(repeat)
 .emphatic.bespoke-backdrop
   transition transform 300ms ease-out 400ms
   transform translate3d(0, -100%, 0)
-  //width 100%
-  //height 100%
 .emphatic.bespoke-backdrop-active
   background-image linear-gradient(to bottom, #750000 90%, white 90%)
   transform translate3d(0, 0, 0)
@@ -436,6 +468,32 @@ full-dimension-backdrop(repeat)
     text-align left
     bottom 1em
 
+.chapter.bespoke-backdrop
+  transition transform 300ms ease-out 400ms, opacity 300ms ease-out 400ms
+  transform translate3d(-200%, 0, 0)
+  opacity 0
+.chapter.bespoke-backdrop-active
+  background-image linear-gradient(to right, rebeccapurple 90%, white 90%)
+  transform translate3d(-45%, 0, 0)
+  width 200%
+  height 100%
+  opacity 1
+.bespoke-slide[data-bespoke-backdrop="chapter"]
+  text-align left
+  display block
+  h1, h2
+    font-size 4em
+    position absolute
+    color white
+    text-align left
+    bottom 1em
+
+.white.bespoke-backdrop
+  transition none
+.white.bespoke-backdrop-active
+  background-color white
+  width 100%
+  height 100%
 
 .raytraced-teapot.bespoke-backdrop-active
   background-image url(../images/raytraced-teapot.jpg)

@@ -5,12 +5,25 @@
 # Introdução a NoSQL
 
 ---
+# Roteiro
+
+1. Por quê NoSQL (capítulo 1)
+1. Modelos de Dados Agregados (capítulo 2)
+1. Um pouco mais sobre Modelos de Dados (capítulo 3)
+
+---
 <!--
   backdrop: batman-lego
 -->
 
-# Por que estamos aqui?
+# Por quê NoSQL?
 
+---
+<!--
+  backdrop: chapter
+-->
+
+# Introdução a NoSQL
 ---
 <!--
   backdrop: emphatic
@@ -221,6 +234,285 @@
   - _Open-source_
   - Usos recentes da Web
   - _Schemaless_
+
+---
+<!--
+  backdrop: chapter
+-->
+
+# Modelos de Dados Agregados
+
+---
+## Introdução
+
+
+- <p class="note" style="float:right;width: 40%;">Um **modelo de dados** é a forma como **vemos
+e manipulamos nossos dados**</p>
+  Modelo de dados é diferente de modelo de armazenamento
+  - O modelo relacional usa **relações (tabelas) e tuplas (linhas/registros)**
+  - Modelos NoSQL são divididos em 4 grandes tipos:
+    1. _key-value_ (chave-valor)
+    1. _documents_ (documentos)
+    1. _column-family_ (famílias de colunas)
+    1. _graph_ (grafo)
+  - Os 3 primeiros têm uma característica em comum: são **orientados a
+    agregados**
+    - Vamos ver o que isso significa
+
+---
+<!--
+  backdrop: emphatic
+-->
+
+# Agregados
+---
+## Relações e Tuplas
+
+- <p class="note" style="float:right;width: 40%;">**Tupla**: um conjunto de
+valores</p>
+  Não é possível aninhar tuplas - elas são estruturas "achatadas"
+  - Não é possível colocar uma lista de valores ou uma tupla dentro da outra
+- O modelo relacional é baseado na álgebra relacional em que **todas as
+  operações resultam em uma tupla ou relação**
+- Os modelos orientados a agregados partem com esse princípio
+
+---
+## Um agregado
+
+- Às vezes (_e.g._ quando programamos) é mais fácil pensar e usar registros
+  mais complexos que uma tupla - que permitam listas e aninhamento
+
+<p class="note" style="width: 70%;">Um **agregado** é uma **coleção de objetos**
+relacionados que queremos **tratar de forma unitária**</p>
+
+- Em particular:
+  1. **Operações atômicas** são realizadas por agregado (ACID)
+  1. O banco matém **consistência no nível dos agregados**
+  1. **Comunicamos com o banco** usando agregados
+
+---
+
+<div class="layout-split-2" style="height: auto;">
+  <section style="border-right: 4px dotted silver;" class="bullet">
+    <h2>Tupla</h2>
+    <img src="../../images/tuple.png">
+  </section>
+  <section class="bullet">
+    <h2>Agregado</h2>
+<pre>
+<code class="hljs lang-json" style="text-align: left;">
+{
+  "id": 1,
+  "name": "Martin",
+  "billingAddress": ["Chicago"]
+}
+</code>
+</pre>
+  </section>
+</div>
+
+
+---
+## Por que usar agregados?
+
+- Mantendo atomicidade, consistência, isolamento e durabilidade **apenas
+  intra-agregados**, os agregados podem ser usados como a unidade mínima,
+  indivisível na hora de fazer _sharding_ ou replicação:
+  - Cada _shard_ ou nó replicador contém agregados inteiros (ou)
+  - **Cada agregado** fica armazenado em um (e **apenas um) nó**
+
+---
+<!--
+  backdrop: emphatic
+-->
+
+# Exemplão: _e-commerce_
+
+---
+## Exemplo de _e-commerce_
+
+- Cenário: **venda de produtos** _online_. Vejamos um modelo
+  relacional:
+
+  ![](../../images/example-ecommerce-relational.png)
+
+---
+
+![](../../images/example-ecommerce-relational-data.png)
+
+---
+## Exemplo de _e-commerce_ (cont.)
+
+- Mesmo cenário, em **modelo agregado**:
+
+  ![](../../images/example-ecommerce-aggregate.png)
+
+---
+- **Documento** de cliente (_Customer_):
+  ```json
+  {
+    "id": 1,
+    "name": "Martin",
+    "billingAddress": [
+      {
+        "city": "Chicago"
+      }
+    ]
+  }
+  ```
+  - Escrito no formato <abbr title="JavaScript Object Notation">JSON</abbr>
+
+---
+- **Documento** de pedido (_Order_):
+  ```json
+  {
+    "id": 99,
+    "customerId": 1,
+    "orderItems": [
+      {
+        "productId": 27,
+        "price": 32.45,
+        "productName": "NoSQL Distilled"
+      }
+    ],
+    "shippingAddress": [
+      {
+        "city": "Chicago"
+      }
+    ],
+    "orderPayment": [
+      {
+        "ccinfo": "1000-1000-1000-1000",
+        "txnId":"abelif879rft",
+        "billingAddress": {
+          "city": "Chicago"
+        }
+      }
+    ]
+  }
+  ```
+
+---
+<!--
+  classes: no-bullet
+-->
+
+## O que mudou?
+
+- Objetos aninhados
+  - Um pedido (_Order_) tem uma lista de itens (_OrderItem_)
+- Desnormalização
+  - Um mesmo endereço "Chicago" apareceu (e foi armazenado) 3x
+- Relação implícita entre os 2 agregados: via um campo (a prior qualquer)
+  `"customerId"` em _Order_
+
+<p class="note">**Importante:** não há apenas uma forma para definir **a
+  fronteira dos agregados**</p>
+
+---
+<!--
+  backdrop: emphatic
+-->
+
+# Como faço para modelar os dados?
+
+---
+## Como modelar os agregados?
+
+- Não há uma forma universal
+- Algumas formas serão melhores ou piores, dependendo do uso que seja feito dos
+  dados. Exemplo da modelagem anterior:
+  - Fica fácil (/barato) descobrir, _e.g._, quais são os pedidos serão
+    entregues em Chicago
+  - Mas fica difícil (/caro) analisar, _e.g._, as vendas de cada produto ao
+    longo do tempo
+- **A modelagem depende inteiramente da forma como os dados serão utilizados!**
+- Teremos uma aula e exercícios práticos sobre como modelar
+
+---
+## Agregados e Transações
+
+- Devido a esse _trade-off_ da modelagem atender bem alguns casos e outros não,
+  **por quê usamos agregados mesmo**?
+  - _Clustering_ ;)
+- Transações são o mecanismo <abbr title="Atomicity, Consistency, Isolation, Durability">ACID</abbr> dos bancos relacionais
+- Usando agregados, não é possível garantir ACID
+  - Na verdade, usa-se <abbr title="Basically Available, Soft state, Eventually Consistent">BASE</abbr>, mas veremos mais sobre isso depois
+  - Garante-se **propriedades ACID** para alterações realizadas **dentro de um
+    agregado**, **mas não inter-agregados**
+
+---
+<!--
+  backdrop: chapter
+-->
+
+# Mais sobre modelos de dados
+
+---
+# Principais **modelos de Dados NoSQL**
+
+<figure style="position: relative;width:100%;height:260px;">
+  <img src="../../images/model-flavors.png" class="bullet bullet-no-anim" style="position:absolute;top:0;left:0;">
+  <img src="../../images/model-flavors-2.png" class="bullet bullet-no-anim" style="position:absolute;top:0;left:0;">
+</figure>
+
+- [Lista curada](http://nosql-database.org/) de bancos NoSQL (150 _and counting_ :)
+
+---
+<!--
+  classes: no-bullet
+-->
+
+## Tipo: **_Key-Value_**
+
+- ![right](../../images/keyvalue-scheme.png)
+  Basicamente armazena qualquer coisa a partir de uma chave.
+- Completamente sem Schema (Schemaless)
+- Operações básicas
+  - `Get, Set, Delete`
+- Outras operações específicas por implementação
+
+---
+## Tipo: **_Document_**
+
+- ![right](../../images/document-scheme.png)
+  Key-Value com um pouco mais de estrutura
+- Valor armazenado utiliza formatos como XML, JSON, BSON
+- Estrutura de documentos flexíveis.
+- Consultas por campos dos documentos.
+- Inserção de documentos e atualização de campos
+
+---
+## Tipo: ** _Column-family_**
+
+![](../../images/columnfamily-scheme.png)
+- Não considere como uma tabela, mas como um mapa de 2 níveis
+  - 2 chaves: identificador de linhas, id. de coluna
+- Em vez de armazenar cada _row_ contígua, armazena um conjunto de colunas das
+  _rows_
+
+---
+<!--
+  backdrop: white
+-->
+
+![](../../images/columnfamily-book-example.png)
+```js
+get('1234', 'name');
+```
+
+---
+## Tipo: **_Graph_**
+
+- Um peixe fora d'água no laguinho NoSQL
+- Mas os banco relacionais não são feitos de relacionamentos ?
+  - Custoso (JOIN é uma operação cara)
+  - Inserções comprometidas
+  - Buscas complexas
+- Dados simples (pequenos), mas muitas ligações entre eles
+
+---
+![](../../images/graph-scheme.png)
 
 ---
 # Referências
