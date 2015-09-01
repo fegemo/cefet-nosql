@@ -18,7 +18,7 @@ precisa ser comunicada ao professor na segunda semana de aula. Caso dois grupos
 façam a mesma escolha, o professor irá sortear (ou abrir para reopção) um novo
 tema para o grupo que informou a escolha por último.
 
-- [Persistência Poliglota](attachments/Chapter-13-Polyglot-Persistence.pdf) (
+- [Persistência Poliglota](https://fegemo.github.io/cefet-nosql/attachments/Chapter-13-Polyglot-Persistence.pdf) (
   capítulo 13 do livro _NoSQL Distilled_)
   - Resumir o capítulo e procurar em outras fontes sobre o assunto
 - Um banco de dados NoSQL a sua escolha
