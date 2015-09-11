@@ -83,6 +83,12 @@
 -->
 
 # Modelando para Acesso aos Dados
+
+---
+<!--
+  backdrop: blog
+-->
+
 ---
 ## Modelando para Acesso aos Dados
 
@@ -352,10 +358,118 @@
 -->
 
 # Consistência e Teorema CAP
+---
+## **Consistência**
+
+One of the biggest changes from a centralized relational database to a cluster- oriented NoSQL database is in how you think about consistency. Relational databases try to exhibit strong consistency by avoiding all the various inconsistencies that we’ll shortly be discussing. Once
+
+- Uma das maiores mudanças ao passar a usar um _cluster_ com bancos NoSQL em
+  vez de um banco relacional centralizado é a consistência dos dados
+- Bancos relacionais **se esforçam ao máximo** para garantir
+  **consistência forte** ao evitar os tipos de inconsistências que veremos a
+  seguir
 
 ---
-## Consistência de Atualização
+## Mitos e Verdades
 
+<p style="text-align: center; background: rgba(0,0,0,.15);padding:.15em .5em; border-radius: .25em; width: 70%;">
+_"Bancos relacionais são ACID, logo não preciso me preocupar com consistência"_
+</p>
+
+- Veridito: mentira
+  - Servidor centralizado
+    - Duas+ pessoas podem reservar o último quarto do hotel, mesmo em um
+      banco relacional
+  - Vários servidores
+    - Todas as pessoas podem efetivamente adquirir a reserva
+  - Há uma diferença entre uma **transação de negócio e uma transação
+    técnica**
+---
+## Consistência de Escrita
+
+- Conflitos **escrita-escrita** ocorrem quando dois clientes tentam atualizar
+  o mesmo dado ao mesmo tempo
+  - Único servidor: serializa as escritas e as aplica em sequência
+    - Uma delas será sobrescrita
+- Controle de concorrência pode ser feito de forma pessimista ou otimista
+  - Abordagem **<u>pessimista</u> tranca o dataset** para prevenir conflitos
+  - Abordagem **<u>otimista</u> detecta conflitos e os corrige**
+    - Pode usar uma **atualização condicional**: verifica se o valor corrente
+      no momento da atualização é o mesmo valor recuperado durante leitura
+
+---
+## Consistência de Escrita (2)
+
+- Outra alternativa para a abordagem otimista é **armazenar as duas
+  atualizações** e marcá-los como conflitantes (estilo <abbr title="Version Control System">VCS</abbr>)
+  - Uma pessoa pode resolver o conflito
+  - A aplicação ou BD pode tentar resolver
+    - Mas isso é muito específico de cada domínio (_e.g._, formatação de
+      telefone)
+- **Replicação** aumenta muito a possibilidade de conflitos escrita-escrita
+  - **Usar um único nó para escrita** possibilita **evitar conflitos
+    escrita-escrita** muito mais facilmente
+    - Todos as configurações de distribuição, exceto _peer-to-peer_ são assim
+
+---
+<!--
+  backdrop: white
+-->
+
+## Consistência de **Leitura**
+
+![](../../images/consistency-read-write.png)
+
+- Garantir que um banco não possui inconsistência de escritas **não garante que
+  clientes** desses dados sempre **receberão respostas consistentes**
+  - Solução: **transações** (mas e nos bancos NoSQL??)
+
+---
+## Consistência de Leitura (2)
+
+- De fato, os bancos NoSQL que são orientados a agregados não possuem
+  transações
+  - Por outro lado, os bancos de grafos costumam ser ACID assim como os
+    relacionais
+- Mesmo os **bancos sem transações garantem atomicidade de operações,
+  <u>intra</u>-agregado**, mas não <u>inter</u>-agregado
+  - Contudo, não vamos colocar todos os dados em um mesmo agregado
+  - O que nos leva de volta à possibilidade de inconsistência de leitura
+    - O tempo máximo em que uma inconsistência existe é chamado **janela de
+      inconsistência**
+
+---
+<!--
+  backdrop: white
+-->
+
+## Consistência de Leitura (3)
+
+- O problema de inconsistência de leitura fica **maior quando há replicação**
+
+![](../../images/consistency-read-read.png)
+
+---
+## Consistência de Leitura (4)
+
+- Eventualmente, os nós terão propagado totalmente as atualizações
+  - A esta característica, demos o nome de **eventualmente consistente**
+- A configuração de consistência não é "global" na aplicação
+  - Cada tipo de requisição pode ser configurado da melhor forma
+    (_strong/weak_)
+
+---
+## Afrouxando **Consistência**
+
+- Consistência é lindo. Podemos tentar maximizá-la em um sistema, mas
+  inevitavelmente sacrificaremos outras características do sistema
+  - _e.g._, uma abordagem pessimista trancando os dados
+- O teorema CAP (Brewer 2000) afirma que se há uma partição na rede, você
+  precisa trocar disponibilidade dos dados por consistência (ou vice-versa)
+  - **Disponibilidade** (_availability_): poder ler e escrever em um nó do
+    _cluster_
+  - **Tolerância ao Particionamento** (_partition tolerance_): _cluster_
+    sobrevive ao rompimento na comunicação dos nós
 
 ---
 <!--
@@ -363,9 +477,28 @@
 -->
 
 ---
-## **Consistência**
+## Afrouxando **Consistência** (2)
 
+- Em alguns casos, **não é tão problemático** ter **baixa consistência para ter
+  alta disponibilidade**
+  - Exemplo: **carrinho de compra** (DynamoDB da Amazon):
+    - Cliente sempre pode colocar produtos ao carrinho (_availability_)
+    - Problemas na rede podem gerar múltiplis carrinhos por cliente
+    - No processo de fechamento, carrinho é mesclado e cliente pode revisá-lo
+  - Exemplo: **hotel** permitir _overbooking_
 
+---
+## Afrouxando **Durabilidade**
+
+- Alguns bancos podem trocar alta durabilidade por maior disponibilidade
+  - Por exemplo, bancos que são _in-memory_ (Memcached, Redis etc.)
+  - De tempos em tempos (_e.g._, segundos) um _backup_ é realizado em disco
+- Aí vem a pergunta: qual a utilidade de um banco que pode perder seus dados?
+  - Dependendo do domínio, uma possível perda (servidor desligou abruptamente)
+    pode ser suportada
+    - Exemplo: lista de visitantes online, sessão de usuário
+- A ideia é que perder os dados de alguns eventualmente é um mal menor do
+  que ter um sistema lento (indisponível) para todos
 
 ---
 <!--
@@ -375,12 +508,174 @@
 # Modelos de Processamento e _Map-Reduce_
 
 ---
-jlkj
+## Agregados e _Clusters_
 
+- Bancos orientados a agregados mudam as regras de armazenamento (CAP)
+- Mas executar em _clusters_ também muda o modelo computacional
+- Quando dados estão distribuídos em nós de um _cluster_, podemos
+  (devemos) processá-los de forma distribuída (paralela)
+
+---
+## Processamento no Servidor _vs_ no Cliente
+
+- Em apenas 1 servidor, dados podem ser processados no próprio servidor ou
+  em um cliente
+  1. No cliente
+    - Pros: flexibilidade e linguagens de programação
+    - Cons: transferência de dados do servidor para cliente
+  1. No servidor
+    - Pros: localidade dos dados
+    - Cons: linguagens e dificuldade/impossibilidade de _debugging_
+
+---
+## Computação no _Cluster_
+
+- Podemos distribuir a computação pelo _cluster_
+- Contudo, devemos tentar reduzir a quantidade de dados transferidos pela
+  rede
+- Devemos preservar a localidade da computação
+  - Isto é, processar dados no mesmo nó onde estão armazenados
+
+---
+## Padrão: **_Scatter-Gather_**
+
+- Podemos usar um padrão de integração chamado _scatter-gather_
+- A ideia é transmitir uma mensagem para múltiplos destinatários e depois
+  reunir as respostas de volta em uma única mensagem
+
+![](../../images/scatter-gather-example.png)
+
+---
+## **_Map-Reduce_**
+
+- É uma forma de organizar o processamento de forma a tirar vantagem
+  do _cluster_
+  - Mantendo o processamento próximo dos dados sendo processados
+- Ganhou fama com o _framework MapReduce_ da Google ([Dean e Ghemawat, 2004](http://research.google.com/archive/mapreduce.html))
+  - ![right](../../images/hadoop-logo.png)
+    Então, o MapReduce foi implementado no _framework_ Hadoop
+  - Contudo, frequentemente cada banco de dados implementa seu próprio
+    sistema de _Map-Reduce_
+
+---
+## **_Map-Reduce_**: etimologia
+
+- Nome inspirado nas funções `map` e `reduce` de linguagens funcionais
+  - `lista map(lista aModificar)`: **transforma uma lista em outra**,
+    com mais ou menos elementos, possivelmente modificados
+    ```js
+    var numeros = [1, 2, 3];
+    var quadrados = numeros.map(function(numero) {
+      return numero*numero;
+    });
+    ```
+
+---
+## **_Map-Reduce_**: etimologia (2)
+
+- Nome inspirado nas funções `map` e `reduce` de linguagens funcionais
+  - `valor reduce(lista aReduzir)`: **transforma uma lista em um único
+    valor**, aplicando uma função a cada item para, por exemplo, achar um
+    somatório, contar, achar uma média etc.
+    ```js
+    function soma(somaAteAgora, numero) {
+        return somaAteAgora + numero;
+    }
+    var somatorio = quadrados.reduce(soma, 0);
+    ```
+
+---
+## **_Map-Reduce_**: Exemplo
+
+- ![right](../../images/map-reduce-example0.png)
+  Vamos considerar que escolhemos os **pedidos** como **agregados**
+  - Cada pedido tem itens de compra que, por sua vez, tem um id de produto,
+    quantidade e preço cobrado
+  - Tipicamente, quando precisamos do **pedido**, também precisamos saber dos
+    itens que o formam
+  - Vamos considerar também que estamos usando _sharding_
+
+---
+## **_Map-Reduce_** Básico
+- Contudo, e se precisarmos de um relatório mostrando **"vendas por
+  produto nos últimos 7 dias"**?
+  - Esta consulta seria muito cara usando a agregação que criamos
+  - Uma aplicação precisaria percorrer todos os nós do _cluster_ e examinar
+    muitos registros em cada um
+- Este é o cenário exato em que devemos recorrer ao _Map-Reduce_
+
+---
+## **_Map-Reduce_** Básico (2)
+
+![right](../../images/map-reduce-example1.png)
+
+- O **`map`** é uma função que:
+  - Recebe um único agregado
+  - Produz um punhado de _key-value pairs_
+- Neste caso, _key-value pairs_ contendo o ID do produto (chave) e um objeto
+  contendo preço e quantidade (valor)
+
+---
+## **_Map-Reduce_** Básico (3)
+
+- Cada aplicação de função `map` é independente da outra
+  - Podem ser seguramente paralelizadas
+  - Cada _shard_ pode fazer o `map` de seus dados
+- A função `reduce` pega as saídas da `map`, **agrupadas por chave**, e
+  combina seus valores
+
+---
+## **_Map-Reduce_** Básico (4)
+
+- Uma função `map` poderia produzir (_e.g._) 1000 itens de pedidos para
+  "NoSQL Distilled"
+- A função `reduce` combinaria todas em apenas 1, com os totais de
+  quantidade e receita
+- ![right](../../images/map-reduce-example2.png)
+  `map` trabalha em apenas 1 agregado
+- `reduce` deve usar todos os valores emitidos por uma mesma
+  chave (id de produto)
+
+---
+## **_Map-Reduce_** Básico (5)
+
+- O _framework Map-Reduce_ faz com que `map`s executem em seus respectivos
+  nós e então os resultados são movidos para um nó que vá calcular o `reduce`
+- Então, para escrever um _Map-Reduce_, basta implementar uma função `map`
+
+---
+## Particionando e Combinando
+
+- É possível aumentar o paralelismo ao **particionar a saída do `map`**
+
+![](../../images/map-reduce-example3.png)
+
+---
+## Particionando e Combinando
+
+- Tipicamente, várias chaves são agrupadas em partições
+- O _framework_ então pega os dados de todos os nós para uma partição,
+  os combina em um único grupo e o envia para o `reduce`r
+- Múltiplos `reduce`rs podem trabalhar em paralelo e seus resultados
+  são mesclados (processo _a.k.a._ _shuffling_)
+
+---
+## _Map-Reduce_ **Incremental**
+
+- O exemplo anterior é de um _map-reduce_ completo
+  - Mas executar **todas as etapas pode demorar** para grandes datasets
+  - Quando novos dados são inseridos, será que precisamos executar todo
+    o processo novamente?
+- É possível estruturar a computação **_map-reduce_ para possibilitar
+  atualizações incrementais**
+  - Os estágios `map` são simples
+    - Executar apenas quando os dados de _input_ mudarem
+  - As partições de `reduce` são mais complexas
+    - Se um `map` que tem _output_ em uma partição é atualizado,
+      aquela particição deve ser recomputada
 
 ---
 # Referências
-
 
 - Livro _"NoSQL Distilled"_
   - Capítulo 4: _Distribution Models_
