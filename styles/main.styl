@@ -60,6 +60,11 @@ body
     .bespoke-progress-parent
       transform translateY(0)
 
+    .page-author-picture
+      transform translate3d(0,0,0) rotateZ(0deg)
+      opacity 1
+
+
 #page-header
   position fixed
   width 100%
@@ -119,6 +124,9 @@ pre
   width 60px
   height 60px
   border-radius 30px
+  transform translate3d(-200%,0,0) rotateZ(-270deg)
+  opacity .3
+  transition transform 700ms cubic-bezier(0.18, 0.89, 0.32, 1.28)  0s, opacity 700ms ease-out 0s
 
 #presentation-container
   position relative
@@ -197,16 +205,24 @@ $book-height = 250px
 
 .floating
   display block
-  animation floating 3s ease-in-out 0ms infinite alternate
+  animation floating 3s ease-in-out 0ms infinite alternate, floating-shadow 3s ease-in-out 0ms infinite alternate
   &:nth-of-type(2n)
     animation-delay 1s
+
+
+$floating-max-height = 1em
+$floating-shadow-color = rgba(black, .3)
 
 @keyframes floating
   from
     transform translate3d(0,0,0)
   to
-    transform translate3d(0, -2em, 0)
-
+    transform translate3d(0, - $floating-max-height, 0)
+@keyframes floating-shadow
+  from
+    box-shadow 0 0 0 $floating-shadow-color
+  to
+    box-shadow 0 $floating-max-height $floating-max-height $floating-shadow-color *0.5
 
 .layered-paragraph
   background-color rgba(215, 215, 250, 0.5);
@@ -495,9 +511,14 @@ full-dimension-backdrop(repeat)
   width 100%
   height 100%
 
-.raytraced-teapot.bespoke-backdrop-active
-  background-image url(../images/raytraced-teapot.jpg)
+.cap.bespoke-backdrop-active
+  background-image url(../images/cap.png)
   full-dimension-backdrop(false)
+  background-color black
+  background-size contain
+  background-position 50% 50%
+  //transition-delay 600ms !important
+
 
 .bespoke-slide[data-bespoke-backdrop="raytraced-teapot"]
   color white
@@ -565,6 +586,7 @@ full-dimension-backdrop(repeat)
   full-dimension-backdrop(false)
 
 
+@import './book.styl'
 
 // Print styles
 @media print
