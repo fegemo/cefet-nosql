@@ -1,7 +1,3 @@
-<!--
- backdrop: batman-symbol
--->
-
 # Teoria Subjacente ao NoSQL
 
 ---

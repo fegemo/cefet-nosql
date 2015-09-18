@@ -4,9 +4,7 @@
 
 # NoSQL
 
-_Professor:_ Flávio Coutinho
-
-<img class="portrait" src="images/flavio-avatar.jpg">
+_Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
 
 ---
 # Aulas
@@ -14,16 +12,13 @@ _Professor:_ Flávio Coutinho
 - Aula 1: [Introdução a NoSQL](classes/intro/) (31/08/2015)
 - Aula 2: (14/09/2015)
   - [Teoria (Distribuição, CAP, _Map-Reduce_)](classes/theory/)
-  - _Key-Value databases_[](classes/keyvalue/)
-- Aula 3: _Document Stores_[](classes/document/) (21/09/2015)
-  - 18:50 - 20:30
-  - 20:50 - 22:30: Prática
-- Aula 4: _Graph databases_[](classes/graph/) (28/09/2015)
-  - 18:50 - 20:30
-  - 20:50 - 22:30: Prática
-- Aula 5: Seminário e Prova (05/10/2015)
-  - 18:50 - 20:30: [Seminários][seminar]
-  - 20:50 - 22:30: Prova
+- Aula 3: (21/09/2015)
+  - 18:50 - 20:30: [_Key-Value Stores_](classes/keyvalue/)
+  - 20:50 - 22:30: [_Document Stores_](classes/document/) (Prática)
+- Aula 4: (28/09/2015)
+  - 18:50 - 20:30: _Column-family_[](classes/columnfamily/)
+  - 20:50 - 22:30: _Graph databases_[](classes/graph/) (Prática)
+- Aula 5: [Seminário][seminar] e Prova (05/10/2015)
 
 
 [seminar]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/seminar/README.md
