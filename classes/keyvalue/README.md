@@ -42,7 +42,7 @@
 ---
 <div class="layout-split-2" style="height: auto;">
   <section style="border-right: 4px dotted silver;">
-  <h2>Cons</h2>
+    <h2>Cons</h2>
     <ul style="text-align: left">
       <li>Sem filtros complexos (`WHERE`)</li>
       <li>`JOIN`s devem ser feitos em código (no cliente)</li>
