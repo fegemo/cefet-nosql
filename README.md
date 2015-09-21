@@ -4,24 +4,21 @@
 
 # NoSQL
 
-_Professor:_ Flávio Coutinho
-
-<img class="page-author-picture" src="images/flavio-avatar.jpg">
+_Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
 
 ---
 # Aulas
 
 - Aula 1: [Introdução a NoSQL](classes/intro/) (31/08/2015)
-- Aula 2: Teoria (CAP, _Map/Reduce_ etc.)[](classes/theory/) (14/09/2015)
-- Aula 3: _Key-Value databases_[](classes/keyvalue/) (21/09/2015)
-  - 18:50 - 20:30
-  - 20:50 - 22:30: Prática
-- Aula 4: _Document Stores_[](classes/document/) (28/09/2015)
-  - 18:50 - 20:30
-  - 20:50 - 22:30: Prática
-- Aula 5: Seminário e Prova (05/10/2015)
-  - 18:50 - 20:30: [Seminários][seminar]
-  - 20:50 - 22:30: Prova
+- Aula 2: (14/09/2015)
+  - [Teoria (Distribuição, CAP, _Map-Reduce_)](classes/theory/)
+- Aula 3: (21/09/2015)
+  - 18:50 - 20:30: [_Key-Value Stores_](classes/keyvalue/)
+  - 20:50 - 22:30: _Document Stores_[](classes/document/) (Prática)
+- Aula 4: (28/09/2015)
+  - 18:50 - 20:30: _Column-family_[](classes/columnfamily/)
+  - 20:50 - 22:30: _Graph databases_[](classes/graph/) (Prática)
+- Aula 5: [Seminário][seminar] e Prova (05/10/2015)
 
 
 [seminar]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/seminar/README.md
@@ -39,11 +36,30 @@ _Professor:_ Flávio Coutinho
 # Bibliografia
 
 <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%;">
-  <img class="page-author-picture left floating" src="images/pramod-sadalage-avatar.jpg" style="order: 0;">
-  <img class="page-author-picture right floating" src="images/martin-fowler-avatar.jpg" style="order: 2;">
-  <div class="book-cover-container" style="order: 1">
-    <img class="book-cover" src="images/book-nosql-distilled.png">
-    <div class="book-left"></div>
+  <img class="portrait left floating" src="images/pramod-sadalage-avatar.jpg" style="order: 0;">
+  <img class="portrait right floating" src="images/martin-fowler-avatar.jpg" style="order: 2;">
+  <div class="" style="order: 1">
+    <figure class="book">
+      <ul class="hardcover_front" class="no-bullet">
+        <li class="no-bullet"><img src="images/book-nosql-distilled.png" width="100%" height="100%"></li>
+        <li class="no-bullet"></li>
+      </ul>
+      <ul class="page no-bullet">
+        <li class="no-bullet"></li>
+        <li class="no-bullet"><a class="book-btn" href="http://martinfowler.com/books/nosql.html">Sobre</a></li>
+        <li class="no-bullet"></li>
+        <li class="no-bullet"></li>
+        <li class="no-bullet"></li>
+      </ul>
+      <ul class="hardcover_back no-bullet">
+        <li class="no-bullet"></li>
+        <li class="no-bullet"></li>
+      </ul>
+      <ul class="book_spine no-bullet">
+        <li class="no-bullet"></li>
+        <li class="no-bullet"></li>
+      </ul>
+    </figure>  
   </div>
 </div>
 
