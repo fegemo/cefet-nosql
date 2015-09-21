@@ -126,13 +126,160 @@ r.table('tv_shows')
 ```
 
 ---
+## Em quem vamos focar?
+
+![](../../images/document-dbs-trends.png)
+
+---
 <!--
-  backdrop: chapter
+  backdrop: mongodb-forest
 -->
 
-# O MongoDB
+# ![MongoDB](../../images/mongodb-large.png)
+
 ---
-## O MongoDB
+## ![](../../images/mongodb.png)
+
+<p class="note" style="width: 90%;">
+  _“MongoDB” derives from the word **“humongous”** because of its ability to
+  scale up with ease and hold very large amounts of data._
+</p>
+
+- Dados possuem formato flexível
+- Nossa interface com o banco é feita por documentos no formato
+  <abbr title="JavaScript Object Notation">`JSON`</abbr>, mas
+  são armazenados em <abbr title="Binary JSON">`BSON`</abbr>
+  - `BSON` ocupa bem menos espaço
+  - `BSON` possui bem mais tipos de dados do que `JSON`
+- Relações podem ser representadas como referências ou como documentos
+  aninhados (embutidos)
+- _Whitepaper_ da [Arquitetura do MongoDB](http://s3.amazonaws.com/info-mongodb-com/MongoDB_Architecture_Guide.pdf)
+
+---
+## JSON e BSON
+
+- JSON é um [formato aberto](http://json.org/) para representação de dados,
+  **fácil para pessoas e máquinas lerem**
+  - <img src="../../images/crockford.jpg" class="portrait right">
+    Criado por Douglas Crockford, Engenheiro da YAHOO
+- Pode ser usado pelo mesmo objetivo que o `XML`: **interoperabilidade de
+  dados**
+- Possui alguns tipos de dados:
+  1. Números (_double_ de 64 bits)
+  1. _Strings_ (texto)
+  1. Valores _Boolean_ (`true`/`false`)
+  1. _Arrays_
+  1. Objetos (estilo tabelas _hash_)
+
+---
+## Exemplo de um Objeto em JSON
+
+- Arquivo `celebridade_da_computacao.json`
+  ```json
+  {
+    "_id" : 1,
+    "nome" : { "primeiro" : "John", "ultimo" : "Backus" },
+    "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form" ],
+    "premio" : [
+      {
+        "nome" : "W.W. McDowell Award",
+        "ano" : 1967,
+        "entregue_por" : "IEEE Computer Society"
+      }
+    ]
+  }
+  ```
+
+---
+## Formato **JSON para Armazenar**
+
+- Não é a melhor ideia, visto que:
+  - O formato `JSON` não tem um tipo:
+    1. Para data/_timestamp_
+    1. Para diferenciar números inteiros/reais, 32/64bits
+    1. Para representar um campo binário (_e.g._, imagem)
+  - Ele é textual, então ocupa mais espaço em disco do que se fosse binário
+
+---
+## Formato **BSON**
+
+- Os criadores do MongoDB propuseram, então, o
+  **[_Binary `JSON`_](http://bsonspec.org/)**, que o **`JSON` atendesse a
+  demanda de armazenamento**
+
+  ![](../../images/json-bson.png)
+  - Além dos tipos mencionados, há também o tipo `ObjectId`
+
+---
+## Documentos: **_ObjectId_**
+
+- O `ObjectId` é um tipo de dados `BSON` usado como chave dos documentos
+  - Ele tem 12 bytes e é construído por:
+    - 4 bytes representando um **_timestamp_ do "agora"**
+    - 3 bytes identificando a **máquina**
+    - 2 bytes identificando o **_process id_**
+    - 3 bytes de **um contador**, iniciando de um número aleatório
+  - A ideia é que o `ObjectId` de cada documento seja único na coleção
+  - **Todo documento recebe um campo _\_id_**, com um valor de `ObjectId` único
+    gerado pelo banco
+    - Contudo também podemos passar um valor único nosso para _\_id_
+
+---
+## Documentos: Estrutura com Referências
+
+![](../../images/mongo1.png)
+
+---
+## Documentos: Estrutura Embutida
+
+![](../../images/mongo2.png)
+
+---
+## Documentos: Operações de Escrita
+
+Writes are atomic at the document level
+A Denormalized data model facilitates atomic write operations.
+Normalizing the data over multiple collection would require multiple write operation that are not atomic.
+
+---
+## Documentos: Crescimento do Banco
+
+Each time a document is updated the modification are done changing affected attributes
+Each document has a maximum size of 16MB
+If the document size exceeds MongoDB relocates the document on disk.
+In MongoDB 3.0 this problem is minimized using the Power of 2 Sized Allocation
+
+---
+## Documentos: **Índices**
+
+Indexes allows efficient queries on MongoDB.
+They are used to limit the number of documents to inspect
+Otherwise, it has to scan every document in a collection.
+By default MongoDB create indexes only on the _\_id_ field
+Indexes are created using B-tree and stores data of fields ordered by values.
+In addition MongoDB returns sorted results by using the index.
+
+---
+## Documentos: Índices (2)
+
+![](../../images/mongo3.png)
+
+---
+## Documentos: Índices (3)
+
+![](../../images/mongo4.png)
+
+---
+## Documentos: Índices (4)
+
+![](../../images/mongo5.png)
+
+---
+## Documentos: **Tipos de Índices**
+
+Geospatial Index: 2d and 2sphere indexes
+Text Indexes: performs tokenization, stopwords removal and stemming.
+Hashed Indexes: used to provide an hash based sharding
 
 ---
 <!--

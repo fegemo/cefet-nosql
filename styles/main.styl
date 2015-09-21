@@ -452,20 +452,26 @@ full-dimension-backdrop(repeat)
   background-size contain
   background-position 50% 50%
   opacity .25
-.particles.bespoke-backdrop-active
-  background-image url(../images/sistema-particulas-infamous.jpg)
-  full-dimension-backdrop(false)
 .depth-of-field.bespoke-backdrop-active
   background-image url(../images/depth-of-field-unreal.png)
   full-dimension-backdrop(false)
 .bespoke-slide[data-bespoke-backdrop="batman-symbol"],
 .bespoke-slide[data-bespoke-backdrop="batman-lego"],
 .bespoke-slide[data-bespoke-backdrop="attack-of-the-clones"],
-.bespoke-slide[data-bespoke-backdrop="billboarding"],
 .bespoke-slide[data-bespoke-backdrop="particles"],
 .bespoke-slide[data-bespoke-backdrop="depth-of-field"]
   h1
     text-shadow 1px 1px black
+
+.mongodb-forest.bespoke-backdrop-active
+  background-image url(../images/mongodb-forest.jpg)
+  full-dimension-backdrop(false)
+  opacity .8
+.bespoke-slide[data-bespoke-backdrop="mongodb-forest"]
+  img
+    padding .25em .5em
+    border-radius .25em
+    background-color rgba(white, .26)
 
 .emphatic.bespoke-backdrop
   transition transform 300ms ease-out 400ms
