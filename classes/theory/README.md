@@ -23,7 +23,7 @@
     pedido
 - Contudo, o modelo orientado a agregados fica em **desvantagem na realização
   de consultas analíticas (relatórios)**
-  - O custo do JOIN é caro e consultas analíticas são cheias deles
+  - O custo do `JOIN` é caro e consultas analíticas são cheias deles
   - Uma solução é criar índices, mas mesmo assim a performance sofre porque
     os dados podem estar em nós diferentes
 
@@ -43,7 +43,7 @@
 
 - Bancos **NoSQL não possuem _views_**, mas podem ter consultas
   pré-computadas e armazenadas
-  - Podemos pensar que, nesses bancos, devemos **fazer o JOIN em tempo de
+  - Podemos pensar que, nesses bancos, devemos **fazer o `JOIN` em tempo de
     inserção, e não em tempo de consulta**
 - Este é um aspecto fundamental dos bancos orientados a agregados
   - Já que algumas consultas não se encaixam bem na estrutura agregada
@@ -54,20 +54,20 @@
 ## _Views_ Materializadas: Abordagens
 
 - Há duas abordagens: _eager_ e _lazy_
-  1. _Eager_: a _view_ materializada é atualizada quando os dados originais
+  1. **_Eager_**: a _view_ materializada é atualizada quando os dados originais
     são atualizados ou inseridos
-    - Melhor alternativa quando temos mais leitura do que escrita
-  1. _Lazy_: atualizações nas _views_ materializadas ocorrem via
+    - Melhor alternativa quando temos **mais leitura do que escrita**
+  1. **_Lazy_**: atualizações nas _views_ materializadas ocorrem via
     _batch jobs_ em intervalos regulares
-    - Boa alternativa quando atualização dos dados não é de importância
-      crítica
+    - Boa alternativa quando **atualização dos dados não é de importância
+      crítica**
 
 ---
 ## _Views_ Materializadas: Abordagens (2)
 
 - As _views_ podem ser criadas fora do banco de dados
   - Podemos ler os dados, computar a _view_ e salvá-la de volta ao banco
-    **(_Map-Reduce_)**
+    **(podemos usar o tal _Map-Reduce_ para isto)**
 - Normalmente o próprio banco de dados suporta a construção de _views_
   materializadas por ele mesmo
   - Nós provemos qual a computação para gerar e o banco a executa
@@ -84,6 +84,19 @@
 <!--
   backdrop: blog
 -->
+
+---
+## Modelando um Blog
+
+- Este é um modelo de banco relacional para representar um blog
+- Entidades principais:
+  1. Post
+  1. Autor
+  1. Tag
+  1. Usuário
+  1. Comentário
+- Para criar a **página inicial**, de **quais entidades precisamos**?
+- E para a **página de um _post_**?
 
 ---
 ## Modelando para Acesso aos Dados
@@ -149,6 +162,131 @@
   - Liste todos os clientes que compraram o livro "A Torre Negra"
 
 ---
+## Exercício em Sala
+
+- Vamos fazer a modelagem do blog em um banco com modelo de documentos
+- Considere as entidades:
+  <ul class="multi-column-list-3">
+    <li>_Post_</li>
+    <li>Autor</li>
+    <li>_Tag_</li>
+    <li>Usuário</li>
+    <li>Comentário</li>
+  </ul>
+- Considere as páginas:
+  <ul class="multi-column-list-2">
+    <li>Inicial</li>
+    <li>Detalhes de um _post_</li>
+  </ul>
+- Considere **apenas os campos essenciais** de cada entidade
+- Você pode querer usar **apenas 1 agregado ou ter mais de 1**
+  - Obs: **não há apenas uma reposta**
+- Continua...
+
+---
+## Exercício em Sala (2)
+
+- Você pode usar `JSON` como notação para um objeto de exemplo:
+  ```json
+  {
+    "nome": "Flávio Coutinho",
+    "likes": ["cães", "jogos", "programação"],
+    "idade": 29,
+    "cursos": [
+      { "nome": "NoSQL", "turma": "Pós BD" },
+      { "nome": "Desenv. Jogos", "turma": "Eng.Comp." },
+      { "nome": "Comp. Gráfica", "turma": "Eng.Comp." }
+    ]
+  }
+  ```
+
+---
+<!--
+  backdrop: blog-simpler
+-->
+
+---
+## Solução A: **Único agregado por _post_**
+
+```json
+{
+  "id": 1,
+  "titulo": "A floresta encantada de Igarapé",
+  "conteudo": "Desde a alvorada dos tempos, sabe-se que...",
+  "autor": { "primeiro": "Flávio", "ultimo": "Coutinho" },
+  "data": "Mon Sep 21 2015 10:47:28 GMT-0300",
+  "tags": ["florestas", "misticismo"],
+  "comentarios": [
+    {
+      "usuario": "Mafalda",
+      "mensagem": "Odeio seres místicos",
+      "data": "Mon Sep 21 2015 17:47:28 GMT-0300"
+    }
+  ]
+}
+```
+
+---
+## Solução B: **Agregado por _post_, por _usuário_**
+
+```json
+{
+  "id": 1,
+  "titulo": "A floresta encantada de Igarapé",
+  "conteudo": "Desde a alvorada dos tempos, sabe-se que...",
+  "autor": 25,
+  "data": "Mon Sep 21 2015 10:47:28 GMT-0300",
+  "tags": ["florestas", "misticismo"],
+  "comentarios": [ "..." ]
+}
+```
+
+```json
+{
+  "id": 25, "primeiro": "Flávio", "ultimo": "Coutinho"
+}
+```
+
+---
+## Solução C: **Agregado para cada entidade**
+
+```json
+{
+  "id": 1,
+  "titulo": "A floresta encantada de Igarapé",
+  "conteudo": "Desde a alvorada dos tempos, sabe-se que...",
+  "autor": 25,
+  "data": "Mon Sep 21 2015 10:47:28 GMT-0300",
+  "tags": [4, 6],
+  "comentarios": [ "..." ]
+}
+```
+
+```json
+[
+  { "id": 4, "tag": "florestas" },
+  { "id": 6, "tag": "misticismo" },
+]
+```
+
+```json
+{ "id": 25, "primeiro": "Flávio", "ultimo": "Coutinho" }
+```
+
+---
+## Discussão das Soluções
+
+- Em um extremo, podemos **<u>des</u>normalizar ao máximo** (Solução **A**)
+  - Com isso, ganhamos em velocidade de acesso ao banco
+  - Possibilta o _sharding_, já que **cada agregado é "auto-suficiente"**
+  - Perdemos em espaço de armazenamento
+- Em outro extremo, podemos **normalizar ao máximo** (Solução **C**)
+  - Ganha-se em consistência para atualizações
+  - Ganha-se em espaço
+  - Perde-se na possibilidade de fazer _clustering_
+  - Voltamos a um banco relacional :)
+
+---
 <!--
   backdrop: chapter
 -->
@@ -170,26 +308,26 @@
 ---
 ## Modelos de Distribuição
 
-- Os benefícios são importantes e muito bons, mas eles têm seu preço
-  - Executar sistemas em _clusters_ introduz complexidade ao problema
+- Os benefícios são importantes e muito bons, mas eles têm seu preço:
+  - Executar **sistemas em _clusters_ introduz complexidade**
 - Há duas abordagens para distribuição de trabalho:
-  1. Replicação
+  1. **Replicação**
     - Uma cópia dos dados em cada nó
-  1. _Sharding_ (Estilhaçamento dos dados)
+  1. **_Sharding_** ("Estilhaçamento" dos dados)
     - Dados diferentes em cada nó
-- Vejamos algumas configurações possíveis dos modelos
+- Vejamos algumas configurações possíveis desses modelos
 
 ---
 ## Modelo: **Servidor Único**
 
 - A primeira e mais simples forma de distribuição
-- Consiste em ter o banco de dados em apenas um computador
+  - Consiste em ter o **banco de dados em apenas um computador**
 - Faz sentido usar um banco NoSQL em um único servidor:
   - Já que o modelo agregado está mais próximo do modelo de dados
     da aplicação
-- Bancos de dados NoSQL de grafos não são apropriados para _clusters_
+  - Bancos de dados NoSQL de grafos não são apropriados para _clusters_
 - Se o uso dos dados é bem voltado à manipulação de agregados, um _key-value_
-  ou um _document store_ pode ter melhor desempenho do que um relacional
+  ou um _document store_ pode ter melhor desempenho do que um banco relacional
 
 ---
 ## Modelo: **_Sharding_**
@@ -199,14 +337,15 @@
 - Nesse caso, pode-se escalar horizontalmente ao colocar partes diferentes dos
   dados em servidores diferentes (_sharding_)
 - O conceito de _sharding_ não é novidade do NoSQL - já existia antes
-  - Contudo, era controlado na aplicação e não no banco
-- Consistia em (_e.g._) colocar todos os clientes A-D em um _shard_, E-G em
-  outro...
+  - Contudo, era controlado pela aplicação e não pelo próprio banco
+- Consistia em (_e.g._) colocar todos os clientes cujo nome começa com A-D
+  em um _shard_, E-G em outro...
 ---
 ## Modelo: **_Sharding_** (2)
 
-- _Sharding_ torna o modelo de programação mais complexo já que o código da
-  aplicação precisa distribuir a carga entre os _shards_
+- _Sharding_ controlado pela aplicação torna o modelo de programação
+  mais complexo já que o código da aplicação precisa distribuir a carga
+  entre os _shards_
 - Idealmente, cada usuário deveria acessar um servidor diferente e apenas um
   servidor
   - Mas o caso ideal é ideal :)
@@ -215,25 +354,12 @@
 ## _Sharding_: Abordagens
 
 - Para tentar aproximar do caso ideal, precisamos garantir que dados acessados
-  em conjunto ("JOIN") fiquem armazenados no mesmo nó
+  em conjunto (`JOIN`) fiquem armazenados no mesmo nó
   - Isso é muito simples usando agregados
     - **Agregados formam uma unidade natural para ser distribuída**
 - Ao considerar a distribuição dos dados entre os nós temos mais alternativas:
   - _E.g._, se um cliente de Manaus acessa o sistema, seus dados (agregados)
-    estarão todos em um nó (_shard_) que está na região Norte
-
----
-## _Sharding_: Abordagens
-
-- Deve-se considerar também que o acesso aos nós deve ser o mais balanceado
-  possível
-- Os agregados devem ser distribuídos uniformemente para que cada nó receba
-  a mesma quantidade de carga
-- Outra abordagem é colocar agregados juntos se supomos que eles serão lidos
-  em sequência (_column-family_)
-  - _E.g._, o BigTable armazena informações sobre páginas _web_ ordenando de
-    acordo com o reverso dos domínios das páginas
-    ![](../../images/bigtable-reversed-row-keys.png)
+    estarão todos em um nó (_shard_) que está na região Norte do Brasil
 
 ---
 ## _Sharding_ e NoSQL
@@ -242,8 +368,8 @@
 - Isso torna muito mais fácil usar essa técnica de distribuição em uma aplicação
 - _Sharding_ melhora muito o desempenho porque **melhora os tempos de leitura e
   escrita**
-  - Já que cada nó é responsável tanto pela escrita quando pela leitura de seus
-    agregados
+  - Já que **cada nó é responsável tanto pela escrita quando pela leitura
+    de seus agregados**
 
 ---
 ## _Sharding_ e Resiliência
@@ -251,7 +377,7 @@
 - **_Sharding_ faz pouco pela resiliência dos dados** quando usado sozinho
   - Já que dados diferentes estão em cada nó, **a perda de um servidor faz com
     que seus dados fiquem indisponíveis**
-- Assim, na prática, fazer **apenas _sharding_ pode reduzir a resiliência**
+- Assim, na prática, fazer **apenas _sharding_ pode até reduzir a resiliência**
 
 ---
 ## _Sharding_: o momento certo
@@ -260,6 +386,7 @@
 - Outros permitem usuários começaram com um único nó e depois distribuir
 - Contudo, fazer o _sharding_ muito tardio pode causar problemas:
   - Especialmente quando feito em produção
+  - O momento certo deve ser considerado
 
 ---
 # Replicação
@@ -270,9 +397,11 @@
 - Nesta configuração, um nó é designado como _master_ (primário) e os outros
   como _slaves_ (secundários)
   - O **_master_** é a fonte autoritativa dos dados e o **único que pode escrever**
-  - Os **_slaves** são usados apenas **para leitura**
-- Um **processo de replicação sincroniza os dados** dos _slaves_ com os do _master_
-- É **útil quando** se tem um _dataset_ em que se faz **muita leitura**
+  - Os **_slaves_** são usados apenas **para leitura**
+- Um **processo de replicação sincroniza os dados** dos _slaves_ com os
+  do _master_
+- É **útil quando** se tem um _dataset_ em que se faz **muita leitura**, mas
+  pouca escrita
 
 ---
 ## Replicação _Master-Slave_ (2)
@@ -287,11 +416,12 @@
 ---
 ## Replicação _Master-Slave_ (3)
 
-- Outra característica é que um _slave_ pode se tornar um _master_
+- Outra característica é que **um _slave_ pode se tornar um _master_**
   - _Masters_ podem ser designados manualmente ou automaticamente
 - Para obtermos resiliência, aplicações precisam conhecer o caminho dos bancos
   para leitura e para escrita e usá-los separadamente
   - Isto é normalmente feito usando conexões separadas aos bancos de dados
+    - _E.g._, várias _strings_ de conexão com o banco em vez de apenas 1
 
 ---
 ## Replicação _Master-Slave_ (4)
@@ -337,7 +467,6 @@
 - _Peer-to-peer_ + _Sharding_: cada dataset está presente (tipicamente)
   em 3 nós replicados
   - O **fator de replicação** 3 é normalmente usado
-  - Comum em bancos _column-family_
 
 ---
 <!--
@@ -357,8 +486,6 @@
 ---
 ## **Consistência**
 
-One of the biggest changes from a centralized relational database to a cluster- oriented NoSQL database is in how you think about consistency. Relational databases try to exhibit strong consistency by avoiding all the various inconsistencies that we’ll shortly be discussing. Once
-
 - Uma das maiores mudanças ao passar a usar um _cluster_ com bancos NoSQL em
   vez de um banco relacional centralizado é a consistência dos dados
 - Bancos relacionais **se esforçam ao máximo** para garantir
@@ -372,7 +499,7 @@ One of the biggest changes from a centralized relational database to a cluster- 
 _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência"_
 </p>
 
-- Veridito: mentira
+- Veridito: **mentira** :)
   - Servidor centralizado
     - Duas+ pessoas podem reservar o último quarto do hotel, mesmo em um
       banco relacional
@@ -380,6 +507,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
     - Todas as pessoas podem efetivamente adquirir a reserva
   - Há uma diferença entre uma **transação de negócio e uma transação
     técnica**
+
 ---
 ## Consistência de Escrita
 

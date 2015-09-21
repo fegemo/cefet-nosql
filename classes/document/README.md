@@ -320,3 +320,9 @@ Hashed Indexes: used to provide an hash based sharding
     </ul>
   </section>
 </div>
+
+---
+# Referências
+
+- Livro _"NoSQL Distilled"_
+  - Capítulo 8: _Document Stores_
