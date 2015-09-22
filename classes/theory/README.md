@@ -765,16 +765,31 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
 
 - O _framework Map-Reduce_ faz com que `map`s executem em seus respectivos
   nós e então os resultados são movidos para um nó que vá calcular o `reduce`
-- Então, para escrever um _Map-Reduce_, basta implementar uma função `map`
+- Então, para escrever um _Map-Reduce_, basta escrever o código de
+  uma função `map` e o código de uma função `reduce`
 
 ---
+## Exemplo no MongoDB
+
+- ![right](../../images/map-reduce-mongodb-orders.png)
+  Dado que temos uma coleção de pedidos (_orders_) que estão _sharded_
+  no _cluster_, como podemos gerar um relatório que retorna o **quanto
+  cada cliente gastou na minha loja**?
+  - Considere esta **coleção de pedidos**:
+  - Além disso, vamos considerar apenas os **pedidos aprovados** (status == "A")
+
+---
+![](../../images/map-reduce-mongodb.png)
+
+<!--
+21---
 ## Particionando e Combinando
 
 - É possível aumentar o paralelismo ao **particionar a saída do `map`**
 
 ![](../../images/map-reduce-example3.png)
 
----
+21---
 ## Particionando e Combinando
 
 - Tipicamente, várias chaves são agrupadas em partições
@@ -782,6 +797,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
   os combina em um único grupo e o envia para o `reduce`r
 - Múltiplos `reduce`rs podem trabalhar em paralelo e seus resultados
   são mesclados (processo _a.k.a._ _shuffling_)
+-->
 
 ---
 ## _Map-Reduce_ **Incremental**
