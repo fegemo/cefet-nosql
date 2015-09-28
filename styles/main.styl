@@ -324,26 +324,33 @@ $tutorial-right = 20px
 
 // TODO: put this on the theme
 table
-  max-width 760px
+  font-family "Lucida Sans Unicode", "Lucida Grande", Sans-Serif
+  font-size 12px
+  margin 45px
+  border-collapse collapse
+  text-align left
+  th
+    font-size 14px
+    font-weight normal
+    color #039
+    padding 10px 8px
+    border-bottom 2px solid #6678b1
+    background-color rgba(white, .55)
+    &:empty
+      background-color transparent
+  td
+    border-bottom 1px solid #ccc
+    color #669
+    padding 6px 8px
+    background-color rgba(white, .35)
+    &:empty
+      background-color transparent
+  tbody
+    tr
+      &:hover
+        td
+          color #009
 
-td:not(:last-child), th:not(:last-child)
-  border-right 1px solid rgba(0,0,0,.2)
-
-td
-  padding 6px
-
-th
-  padding 10px
-
-tr
-  border 1px solid rgba(0,0,0,.4)
-
-tr:nth-of-type(2n) > td
-  background-color rgba(255,255,255,.4)
-
-thead > tr
-  background-color #555
-  color white
 
 
 // utility slide classes
@@ -472,6 +479,15 @@ full-dimension-backdrop(repeat)
     padding .25em .5em
     border-radius .25em
     background-color rgba(white, .26)
+
+.cassandra-troy.bespoke-backdrop-active
+  background-image url(../images/cassandra-troy.jpg)
+  background-size contain
+  background-position 0 0
+  background-color white
+  width 100%
+  height 100%
+
 
 .emphatic.bespoke-backdrop
   transition transform 300ms ease-out 400ms
