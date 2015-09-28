@@ -14,7 +14,7 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
   - [Teoria (Distribuição, CAP, _Map-Reduce_)](classes/theory/)
 - Aula 3: (21/09/2015)
   - 18:50 - 20:30: [_Key-Value Stores_](classes/keyvalue/)
-  - 20:50 - 22:30: _Document Stores_[](classes/document/) (Prática)
+  - 20:50 - 22:30: [_Document Stores_](classes/document/) ([Prática][activity-mongodb])
 - Aula 4: (28/09/2015)
   - 18:50 - 20:30: _Column-family_[](classes/columnfamily/)
   - 20:50 - 22:30: _Graph databases_[](classes/graph/) (Prática)
@@ -22,6 +22,8 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
 
 
 [seminar]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/seminar/README.md
+[activity-mongodb]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/mongodb/README.md
+[activity-neo4j]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/neo4j/README.md
 
 ---
 # Objetivos
