@@ -117,11 +117,11 @@ documentos agora fazem parte da coleção `restaurants`.
 
 Você deve fazer as seguintes consultas na coleção `restaurants`:
 
-a. Listar todos os restaurantes
-b. Encontrar todos os restaurantes no bairro (`borough`) `"Manhattan"`
-c. Encontrar todos os restaurantes com CEP (`zipcode`, dentro de `address`) `"10022"`
-d. Encontrar todos os restaurantes que possuem alguma nota (`grade`, dentro de `grades`) `"B"`
-d. Mesmo que anterior, porém mostrar apenas o nome do restaurante (`"name"`)
+1. Listar todos os restaurantes
+1. Encontrar todos os restaurantes no bairro (`borough`) `"Manhattan"`
+1. Encontrar todos os restaurantes com CEP (`zipcode`, dentro de `address`) `"10022"`
+1. Encontrar todos os restaurantes que possuem alguma nota (`grade`, dentro de `grades`) `"B"`
+1. Mesmo que anterior, porém mostrar apenas o nome do restaurante (`"name"`)
 
 ### Entrega
 
@@ -132,11 +132,11 @@ O comando executado para realizar cada consulta.
 
 Você deve fazer as seguintes consultas na coleção `restaurants`:
 
-a. Restaurantes com pontuação (`"score"`, dentro de `"grades"`) **maior que** 30
-b. Restaurantes com pontuação (`"score"`, dentro de `"grades"`) **menor que** 10
-c. Restaurantes com culinária (`"cuisine"`) italiana (`"Italian"`), com CEP `"10075"`
-d. Restaurantes com culinária (`"cuisine"`) italiana (`"Italian"`) **OU** com CEP `"10075"`
-e. Mesmo que a letra (c), porém ordenado por bairro (`"borough"`)
+1. Restaurantes com pontuação (`"score"`, dentro de `"grades"`) **maior que** 30
+1. Restaurantes com pontuação (`"score"`, dentro de `"grades"`) **menor que** 10
+1. Restaurantes com culinária (`"cuisine"`) italiana (`"Italian"`), com CEP `"10075"`
+1. Restaurantes com culinária (`"cuisine"`) italiana (`"Italian"`) **OU** com CEP `"10075"`
+1. Mesmo que 4.3, porém ordenado por bairro (`"borough"`)
 
 ### Entrega
 
