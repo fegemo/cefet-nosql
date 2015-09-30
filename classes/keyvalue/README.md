@@ -168,13 +168,13 @@
 ---
 ## Motivação
 
-- Muitos consideram que _key_value_ nunca poderiam ser usados em substituição
+- Muitos consideram que _key-value_ nunca poderiam ser usados em substituição
   a um banco relacional
   - Muitas vezes não devem mesmo :)
 - Mas aqui vamos mostrar que um _key-value_ pode formar uma camada eficaz e
   eficiente para vários tipos de aplicação
 - Selecionamos uma aplicação estilo Twitter para elucidar
-  - Conheça o **Retwis**
+  - Conheça o **Retwis**: http://retwis.redis.io/
 
 ---
 ## Funcionalidades Principais
