@@ -1,3 +1,6 @@
+<!--
+Resolução do exercício: http://docs.mongodb.org/getting-started/shell/import-data/
+-->
 # Atividade Prática: **MongoDB**
 
 Esta atividade tem o objetivo de fixar os conceitos de NoSQL vistos em
