@@ -12,6 +12,7 @@ var bespoke = require('bespoke'),
     markdown = require('bespoke-meta-markdown'),
     backdrop = require('bespoke-backdrop'),
     overview = require('bespoke-overview'),
+    search = require('bespoke-search'),
     tutorial = require('./tutorial'),
     sleek = require('./sleek-menu');
 
@@ -83,6 +84,7 @@ window.deck = bespoke.from('article', [
   backdrop(),
   bullets('.bespoke-slide:not(.no-bullet) ul:not(.no-bullet) li:not(.no-bullet), .bullet'),
   overview(),
+  search(),
   tutorial(document.getElementsByClassName('tutorial')[0])
   // ,
   // function() {
