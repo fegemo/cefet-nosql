@@ -16,7 +16,7 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
   - 18:50 - 20:30: [_Key-Value Stores_](classes/keyvalue/)
   - 20:50 - 22:30: [_Document Stores_](classes/document/) ([Prática][activity-mongodb])
 - Aula 4: (28/09/2015)
-  - 18:50 - 20:30: _Column-family_[](classes/columnfamily/)
+  - 18:50 - 20:30: [_Column-Family_](classes/columnfamily/)
   - 20:50 - 22:30: _Graph databases_[](classes/graph/) (Prática)
 - Aula 5: [Seminário][seminar] e Prova (05/10/2015)
 

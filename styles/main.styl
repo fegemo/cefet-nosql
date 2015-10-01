@@ -2,7 +2,8 @@
 // thanks to Stylus' "import css" and "paths" options
 //@import 'bespoke-meta-markdown/node_modules/highlight.js/styles/monokai_sublime.css'
 //@import 'highlight.js/styles/monokai_sublime.css'
-@import 'highlight.js/styles/obsidian.css'
+//@import 'highlight.js/styles/obsidian.css'
+@import 'highlight.js/styles/darkula.css'
 
 ///
 /// Variables
@@ -38,6 +39,22 @@ body
 del
   color gray
 
+$dt-width = 160px
+dt
+  float left
+  clear left
+  width $dt-width
+  overflow hidden
+  text-overflow ellipsis
+  white-space nowrap
+  text-align right
+dd
+  margin-left ($dt-width + 20px)
+dt, dd
+  font-size 1.25em
+  margin-bottom .5em
+dl
+  clearfix()
 
 /// Header and content layout
 $meny-offset-top = 10px
@@ -258,11 +275,24 @@ $portrait-size = 100px
 .portrait.right
   float right
 
-img[alt$="right"]
+img[alt$="right"],
+figure.right
   float right
 img[alt$="left"]
   float left
 
+.picture-steps
+  position relative
+  img:not(:first-child)
+    position absolute
+    top 0
+    left 0
+  img
+    &:not(.bespoke-bullet-active)
+      transform initial
+  &.clean
+    img:not(:last-child):not(.bespoke-bullet-current)
+      opacity 0
 
 .note
   padding 1em
@@ -481,23 +511,36 @@ full-dimension-backdrop(repeat)
     border-radius .25em
     background-color rgba(white, .26)
 
+.cassandra-troy.bespoke-backdrop
+  transform translate3d(10%, 0, 0) scale3d(.75,1, 1)
+  transform-origin 0% 0 0
+  opacity 0
+  transition-property transform, opacity;
+  transition-delay 400ms
+  transition-function ease-out
+  transition-duration 200ms
 .cassandra-troy.bespoke-backdrop-active
-  background-image url(../images/cassandra-troy.jpg)
+  background-image url(../images/cassandra-troy.jpg), linear-gradient(0deg, #b8d4ff, white)
+  background-repeat no-repeat
   background-size contain
   background-position 0 0
   background-color white
   width 100%
   height 100%
-
+  transform translate3d(0, 0, 0) scale3d(1, 1, 1)
+  opacity 1
 
 .emphatic.bespoke-backdrop
   transition transform 300ms ease-out 400ms
-  transform translate3d(0, -100%, 0)
+  transform scale3d(1, 0.001, 1);
+  transform-origin 0 70% 0
+  opacity 0
 .emphatic.bespoke-backdrop-active
   background-image linear-gradient(to bottom, #750000 90%, white 90%)
-  transform translate3d(0, 0, 0)
+  transform scale3d(1, 1, 1);
   width 100%
   height 100%
+  opacity 1
 .bespoke-slide[data-bespoke-backdrop="emphatic"]
   text-align left
   display block
