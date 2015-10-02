@@ -17,12 +17,13 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
   - 20:50 - 22:30: [_Document Stores_](classes/document/) ([Prática][activity-mongodb])
 - Aula 4: (28/09/2015)
   - 18:50 - 20:30: [_Column-Family_](classes/columnfamily/)
-  - 20:50 - 22:30: _Graph databases_[](classes/graph/) (Prática)
+  - ~~20:50 - 22:30: _Graph databases_~~ [](classes/graph/) - [Prática MongoDB 2][m2]
 - Aula 5: [Seminário][seminar] e Prova (05/10/2015)
 
 
 [seminar]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/seminar/README.md
 [activity-mongodb]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/mongodb/README.md
+[m2]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/mongodb2/README.md
 [activity-neo4j]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/neo4j/README.md
 
 ---

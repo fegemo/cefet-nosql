@@ -45,7 +45,8 @@ Considerando o mesmo _dataset_ do primeiro exercício, construa as seguintes con
 
 ### Desafios
 
-Valendo 10% extra, tente fazer também as seguintes operações:
+Valendo 15% extra, tente fazer também as seguintes operações:
 
 1. Restaurantes a uma distância de 500m do ponto cujas coordenadas são (-73.978220, 40.643525).
 2. A média das pontuações (_score_) de todos os restaurantes do bairro "Brooklyn".
+3. Encontre a quantidade de restaurantes por cada tipo de culinária (_cuisine_) no "Brooklyn".

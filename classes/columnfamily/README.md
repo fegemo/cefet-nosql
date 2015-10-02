@@ -8,8 +8,11 @@
 # Roteiro
 
 1. Como funcionam os Bancos de Famílias de Colunas (FC)
-1. Exemplos de Bancos de Famílias de Colunas
 1. Apache Cassandra
+  - Introdução
+  - Ferramentas
+  - Arquitetura interna
+  - Modelo de dados
 1. Quando usar + quando não usar
 
 ---
@@ -21,12 +24,10 @@
 | _database instance_                | _cluster_                     | _cluster_                     |
 | _database_                         | _keyspace_                    | _keyspace_                    |
 | _table_                            | _column family_               | _table_                       |
-| _row_                              | _row_                         | _row_                         |
+| _row_                              | _row_                         | _partition                    |
 | _column_ (mesma para todas linhas) | _column_ (pode ser diferente) | _column_ (pode ser diferente) |
 | SQL                                | Thrift                        | CQL                           |
 
----
-a
 ---
 ## Em quem vamos focar?
 
@@ -87,10 +88,6 @@ a
 ## Quem está usando
 
 ![](../../images/cassandra-users.png)
-
----
-## Por onde começar?
-
 
 ---
 <!--
@@ -401,37 +398,232 @@ a
 | `EACH_QUORUM`       | Verifica quórum em cada _data center_ do _cluster_                                 | Balanceado, consistência inter-_data center_                                        |
 |                     |                                                                                    |                                                                                     |
 |                     |                                                                                    |                                                                                     |
+
 ---
-## Operações Anti-Entropia
+## Consistência **imediata** _vs_ **eventual**
+
+- Para uma requisição de leitura, qual a chance de receber
+  dados ultrapassados?
+- **Consistência imediata**: leitura sempre retorna os dados mais
+  recentes
+  - `CL = ALL` garante consistência imediata porque todas as
+    réplicas são verificadas e comparadas antes do resultado
+    ser enviado ao cliente
+  - **Latência mais alta**
+- **Consistência eventual**: leitura pode retornar dado
+  ultrapassado
+  - `CL = ONE` tem o maior risco de _stale data_
+  - **Menor latência**
+
+---
+## Como podemos **ajustar a consistência**
+
+- ![right](../../images/cassandra-cl-immediate.png)
+  Podemos ajustar o `CL` a cada leitura ou escrita
+  ```text
+  if (nos_escritos + nos_lidos) > RF
+  then "temos consistência imediata"
+  ```
+  - Casos:
+    - `CL` escrita `ALL` / leitura `ONE`
+    - `CL` escrita `QUORUM` / leitura `QUORUM`
+    - `CL` escrita `ONE` / leitura `ALL`
+
+---
+## Como **escolher** o nível de consistência
+
+- Dado um cenário, o benefício da consistência imediata
+  justifica o custo de latência?
+  - A Netflix usa `CL=ONE` e mede sua janela de inconsistência em milisegundos
+
+| Nível de Consistência `ONE`        | Nível de Consistência `QUORUM` | Nível de Consistência `ALL` |
+|------------------------------------|--------------------------------|-----------------------------|
+| **Menor latência**                 | Latência mais alta             | Latência mais alta de todas |
+| **Maior vazão**                    | Menor vazão                    | Menor vazão de todas        |
+| **Maior disponibilidade de todas** | Maior disponibilidade          | Menor disponibilidade       |
+| Possibilidade de _stale read_      | **Sem _stale read_**           | **Sem _stale read_**        |
+
+---
+## Operações **Anti-Entropia**
+
+- Como parte do processo de leitura, o coordenador envia:
+  1. A consulta original do cliente para a réplica mais saudável
+  1. Uma consulta para apenas a assinatura (_checksum_) do dado
+    para as outras réplicas  
+- Ao receber de todos, o coordenador compara as assinaturas
+  recebidas com a assinatura que ele mesmo tirou dos dados
+  recebidos da réplica mais saúdavel
+  - Caso as assinaturas sejam iguais, retorna o dado para o cliente
+  -Se elas divergirem, há inconsistência entre as réplicas
+  - Resolver essa inconsistência é fazer um **_read repair_**
+
+---
+## _Read-Repair_
+
+<figure class="picture-steps clean right">
+  <img src="../../images/cassandra-readrepair1.png" class="bullet">
+  <img src="../../images/cassandra-readrepair2.png" class="bullet">
+  <img src="../../images/cassandra-readrepair3.png" class="bullet">
+</figure>
 
 ---
 <!--
   backdrop: emphatic
 -->
 
-# Modelando os Dados
+# Modelo de Dados
 ---
-## Modelo de Dados e CQL
+## Principais Conceitos
 
----
-## Distribuição e Replicação
-
----
-## Famílias de Colunas
-
----
-## CQL: CRUD
+- O modelo de dados do Cassandra define:
+  1. **Família de coluna**, como uma forma de armazenar e organizar dados
+  1. **Tabela**, que é uma visão bidimensional de uma
+    <abbr title="Column Family">CF</abbr> multi-dimensional
+  1. **Operações em tabelas** usando Cassandra Query Language (CQL)
 
 ---
-## Modelo de Distribuição
+## _row, row key, column key, column value_
 
-- Modelo _peer-to-peer_
-- Replicação configurável (tipicamente 3)
+- **_Row_** é a menor unidade que armazena dados relacionados
 
-![](../../images/cassandra-cluster.png)
+<dl>
+  <dt>**_Rows_**</dt><dd>_rows_ individuais constituem uma família
+    de colunas</dd>
+  <dt>**_Row key_**</dt><dd>identifica a _row_ dentro da CF de
+    forma única</dd>
+  <dt>**_Row_**</dt><dd>armazena pares de _column keys_ e _values_
+    </dd>
+  <dt>**_Column key_**</dt><dd>identifica um _column value_
+    de uma _row_
+    </dd>
+  <dt>**_Col. value_**</dt><dd>armazena um valor ou uma coleção
+    </dd>
+</dl>
+
+![](../../images/cassandra-row.png)
 
 ---
-## Forma de armazenamento
+## Exemplo de _rows_
+
+- _Rows_ de artista e banda:
+  - As chaves das colunas (_column keys_) são sempre ordenadas
+
+![](../../images/cassandra-rows-artists.png)
+
+- Uma _row_ pode ser recuperada se conhecermos sua _row key_
+- Um _column value_ pode ser recuperado se conhecermos sua
+  _row key_ e _column key_
+
+---
+# Exemplos de _rows_ (2)
+
+- **_Row key_ composta**: múltiplos componentes, separados por ":"
+  ![](../../images/cassandra-comp-rowkey.png)
+  - 'Revolver' e 1966 são o título e ano do álbum
+  - O valor da coluna 'tracks' é uma coleção (um _map_)
+- **_Column key_ composta**: múltiplos componentes, separados por ":"
+  ![](../../images/cassandra-comp-colkey.png)
+  - 1,2,...,14 são os números das faixas
+
+---
+# Exemplos de _rows_ (2)
+
+- _Row_ pode conter _colum keys_ simples e compostas ao mesmo tempo
+  ![](../../images/cassandra-comp-both.png)
+  - 'genre' e 'performer' são _column keys_ simples
+  - '1:title', '2:title'... são _column keys_ compostas
+
+---
+## Onde podemos **guardar dados**?
+- Qualquer componente de uma _row_ pode armazenar dados
+  ou metadados
+  - _Row key_ simples ou composta
+  - _Column key_ simples ou composta
+  - Dados atômicos ou em coleções em _column values_
+![](../../images/cassandra-rows-meta.png)
+  - **Metadados**: 'Side One', 'Side Two', 'title', 'duration'
+  - **Dados**: todo o resto ('Revolver', '1966'...)
+
+---
+## **Família de Colunas**
+
+- **Família de coluna**: é um conjunto de _rows_ com
+  estrutura parecida
+
+![](../../images/cassandra-cf.png)
+
+---
+## Família de Colunas (2)
+
+- É uma estrutura que pode ser distribuída (_sharding_)
+- Pode ser esparsa
+  - Família de coluna que armazena dados sobre artistas e bandas
+
+![](../../images/cassandra-cf-example.png)
+
+---
+## Família de Colunas (3)
+
+- As colunas estão sempre ordenadas pela chave
+- Estrutura multi-dimensional
+  - Família de colunas que armazena albums e suas faixas
+
+![](../../images/cassandra-cf-sorted.png)
+
+---
+## Tabela _vs_ Família de Coluna
+
+- Uma tabela CQL é uma família de coluna
+  - A tabela fornece visões 2D de uma família de colunas, que
+    **potencialmente contém dados multi-dimensionais** devido
+    às chaves compostas e coleções
+
+| Tabela (em termos de CQL)                                                                                    | Família de Coluna (Thrift)                                                                |
+|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Tabela é um **conjunto de partições**                                                                        | FC é um conjunto de _rows_                                                                |
+| Partição pode ser composta por uma ou mais _rows_                                                            | _Row key_ identifica unicamente a _row_ e pode ser simples ou composta                    |
+| Coluna identifica uma célula em uma partição                                                                 | _Column key_ identifica unicamente uma célula em uma _row_ e pode ser simples ou composta |
+| Chave primária é composta pela chave da partição  mais _clustering columns_ e identificam unicamente a _row_ |                                                                                        ...|
+
+---
+## Partição, chave de partição
+
+- **Tabela** cujas **partições são apenas 1 _row_ cada**:
+![](../../images/cassandra-cf-singlerow-partition1.png)
+- Visualização da **família de coluna**:
+![](../../images/cassandra-cf-singlerow-partition2.png)
+
+---
+## Partição, chave de partição (2)
+
+- Tabela com **partições com múltiplas _rows_**:
+![](../../images/cassandra-cf-multirow-partition.png)
+
+---
+## Colunas **estáticas**
+
+- Tabela com partições com múltiplas _rows_:
+![](../../images/cassandra-static-columns.png)
+- Os valores das colunas estáticas são os mesmos para todas
+  as _rows_ em uma partição com múltiplas _rows_
+
+---
+## Colunas **estáticas** (2)
+
+- Tabela com partições com múltiplas _rows_:
+![](../../images/cassandra-static-columns2.png)
+
+---
+## **Chave primária** de uma tabela
+
+- A chave primária identifica unicamente uma _row_ da tabela
+  - Formada pela chave de partição (simples ou composta) e pelas
+    colunas de _clusterização_ (se houver)
+    ![](../../images/cassandra-pk1.png)
+  - ![right](../../images/cassandra-pk2.png)
+    **Chave primária** da tabela acima: **`performer`**
+  - **Chave primária** da tabela à direita: **`album, year, number`**
+  - Colunas estáticas não podem fazer parte da chave primária
 
 ---
 ## CQL (Cassandra Query Language)
@@ -442,144 +634,53 @@ a
 - Substituiu o _Thrift API_ que havia antes
 - Provê definições do _schema_ em um contexto flexível (NoSQL)
   ```
-  CREATE TABLE Cantor (
+  CREATE TABLE Singer (
     name VARCHAR,
     type VARCHAR,
-    country VARCHAR,
-    style VARCHAR,
-    born INT,
     died INT,
     PRIMARY KEY (name)
   )
   ```
 
-
 ---
-## JSON e BSON
+## CQL: Criando _keyspaces_
 
-- JSON é um [formato aberto](http://json.org/) para representação de dados,
-  **fácil para pessoas e máquinas lerem**
-  - <img src="../../images/crockford.jpg" class="portrait right">
-    Criado por Douglas Crockford, Engenheiro da YAHOO
-- Pode ser usado pelo mesmo objetivo que o `XML`: **interoperabilidade de
-  dados**
-- Possui alguns tipos de dados:
-  1. Números (_double_ de 64 bits)
-  1. _Strings_ (texto)
-  1. Valores _Boolean_ (`true`/`false`)
-  1. _Arrays_
-  1. Objetos (estilo tabelas _hash_)
-
----
-## Exemplo de um Objeto em JSON
-
-- Arquivo `celebridade_da_computacao.json`
-  ```json
-  {
-    "_id" : 1,
-    "nome" : { "primeiro" : "John", "ultimo" : "Backus" },
-    "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form" ],
-    "premio" : [
-      {
-        "nome" : "W.W. McDowell Award",
-        "ano" : 1967,
-        "entregue_por" : "IEEE Computer Society"
-      }
-    ]
-  }
+- Para criar um _keyspace_ (um banco):
+  ```sql
+  CREATE KEYSPACE musicdb
+  WITH replication = {
+    'class': 'SimpleStrategy',
+    'replication_factor' : 3
+  };
+  ```
+- Para começar a usá-lo:
+  ```sql
+  USE musicdb;
+  ```
+- Para excluir:
+  ```sql
+  DROP KEYSPACE musicdb;
   ```
 
 ---
-## Formato **JSON para Armazenar**
+## CQL: Criando uma tabela
 
-- Não é a melhor ideia, visto que:
-  - O formato `JSON` não tem um tipo:
-    1. Para data/_timestamp_
-    1. Para diferenciar números inteiros/reais, 32/64bits
-    1. Para representar um campo binário (_e.g._, imagem)
-  - Ele é textual, então ocupa mais espaço em disco do que se fosse binário
+- A chave primária pode ser definida "_in loco_" ou por último
+
+![](../../images/cql-table.png)
 
 ---
-## Formato **BSON**
+## Chave primária, de partição e _clustering_
 
-- Os criadores do MongoDB propuseram, então, o
-  **[_Binary `JSON`_](http://bsonspec.org/)**, que o **`JSON` atendesse a
-  demanda de armazenamento**
-
-  ![](../../images/json-bson.png)
-  - Além dos tipos mencionados, há também o tipo `ObjectId`
-
----
-## Documentos: **_ObjectId_**
-
-- O `ObjectId` é um tipo de dados `BSON` usado como chave dos documentos
-  - Ele tem 12 bytes e é construído por:
-    - 4 bytes representando um **_timestamp_ do "agora"**
-    - 3 bytes identificando a **máquina**
-    - 2 bytes identificando o **_process id_**
-    - 3 bytes de **um contador**, iniciando de um número aleatório
-  - A ideia é que o `ObjectId` de cada documento seja único na coleção
-  - **Todo documento recebe um campo _\_id_**, com um valor de `ObjectId` único
-    gerado pelo banco
-    - Contudo também podemos passar um valor único nosso para _\_id_
-
----
-## Documentos: Estrutura com Referências
-
-![](../../images/mongo1.png)
-
----
-## Documentos: Estrutura Embutida
-
-![](../../images/mongo2.png)
-
----
-## Documentos: Operações de Escrita
-
-Writes are atomic at the document level
-A Denormalized data model facilitates atomic write operations.
-Normalizing the data over multiple collection would require multiple write operation that are not atomic.
-
----
-## Documentos: Crescimento do Banco
-
-Each time a document is updated the modification are done changing affected attributes
-Each document has a maximum size of 16MB
-If the document size exceeds MongoDB relocates the document on disk.
-In MongoDB 3.0 this problem is minimized using the Power of 2 Sized Allocation
-
----
-## Documentos: **Índices**
-
-Indexes allows efficient queries on MongoDB.
-They are used to limit the number of documents to inspect
-Otherwise, it has to scan every document in a collection.
-By default MongoDB create indexes only on the _\_id_ field
-Indexes are created using B-tree and stores data of fields ordered by values.
-In addition MongoDB returns sorted results by using the index.
-
----
-## Documentos: Índices (2)
-
-![](../../images/mongo3.png)
-
----
-## Documentos: Índices (3)
-
-![](../../images/mongo4.png)
-
----
-## Documentos: Índices (4)
-
-![](../../images/mongo5.png)
-
----
-## Documentos: **Tipos de Índices**
-
-Geospatial Index: 2d and 2sphere indexes
-Text Indexes: performs tokenization, stopwords removal and stemming.
-Hashed Indexes: used to provide an hash based sharding
-
+- Chave de partição simples
+  ```sql
+  PRIMARY KEY ( partition_key_column )
+  ```
+- Chave de partição composta
+  ```sql
+  PRIMARY KEY ( (partition_key_column1, ...2 ) )
+  ```
+- Chave de
 ---
 <!--
   backdrop: chapter
@@ -600,21 +701,16 @@ Hashed Indexes: used to provide an hash based sharding
   <section style="border-right: 4px dotted silver;">
   <h2>Quando usar</h2>
     <ul style="text-align: left">
-      <li>**Log de eventos**: diferentes tipos de eventos, várias aplicações</li>
-      <li>**Gerenciadores de Conteúdo**: _schema free_ dá flexibilidade</li>
-      <li>**_Web Analytics_**: atualizar contadores e outras métricas</li>
-      <li>**_E-commerce_**: _schema_ flexível para diferentes categorias
-        de produtos</li>
+      <li>Grande demanda por escrita</li>
+      <li>Precisa de durabilidade</li>
+      <li>Não há SPoF</li>
+      <li>Grande quantidade de dados</li>
     </ul>
   </section>
   <section>
     <h2>Quando não usar</h2>
     <ul style="text-align: left">
-      <li>**Transações com muitas operações**: atomicidade de operações entre
-        documentos não é garantido. Novos bancos têm suporte: RabenDB</li>
-      <li>**Consultas sobre estruturas agregadas que mudam muito**: se a
-        estrutura dos agregados está sob constante alteração, eles devem
-        ser normalizados</li>
+      <li>Transações ACID são indispensáveis</li>
     </ul>
   </section>
 </div>
