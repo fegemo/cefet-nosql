@@ -75,6 +75,9 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
 
 - Atividades Práticas (40 pontos, 21 e 28/09/2015)
 - [Seminário][seminar] (30 pontos, 05/10/2015)
-- Prova (30 pontos, 05/10/2015)
+- Atividade Final (30 pontos)
+  - Prova (05/10/2015)
+  - [Trabaho Prático][tp] (19/10/2015)
 
 [seminar]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/seminar/README.md
+[tp]: https://github.com/fegemo/cefet-nosql/tree/master/assignments/tp/README.md
