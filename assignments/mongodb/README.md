@@ -69,7 +69,7 @@ junto com a instalação do MongoDB (na pasta `bin/`).
   - Vamos importar os dados para uma coleção chamada `restaurants`
   - Usando o terminal, execute o `mongoimport` no seguinte formato:
     ```
-    mongoimport --db cefet-nosql --collection restaurants --drop --file c:/caminho-para/restaurant-dataset.json
+    mongoimport --db cefet-nosql --collection restaurants --drop --file c:/caminho-para/restaurants-dataset.json
     ```
 
 ### Entrega
