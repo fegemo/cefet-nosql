@@ -423,13 +423,32 @@ for num in (2..5)
     left inherit
     right 0
 
-.phong-vectors
-  .reveal-on-complete
-    opacity 0
-    transition opacity 100ms ease-out
-  &.complete
-    .reveal-on-complete
-      opacity 1
+.full-height
+  height 100%
+
+$qr-container-triangle-width = 15px
+$qr-container-bg-color = rgba(white, 0.85)
+
+#qr-container
+  width 100%
+  height 100%
+  box-sizing border-box
+  position absolute
+  top 0
+  left 0
+  transform translate3d(0, 100%, 0) scale3d(.3, .3, .3)
+  background-color $qr-container-bg-color
+  text-align center
+  vertical-align middle
+  padding 5em
+  opacity 0
+  transition transform 300ms ease-out, opacity 300ms ease-out
+  &.showing
+    transform translate3d(0, 0, 0) scale3d(1, 1, 1)
+    opacity 1
+  & > img,
+  & > svg
+    height 100%
 
 
 // ------------------------------------------------------------
@@ -510,6 +529,10 @@ full-dimension-backdrop(repeat)
     padding .25em .5em
     border-radius .25em
     background-color rgba(white, .26)
+  h1
+    font-weight bold
+    text-shadow 2px 2px #122F00
+    color #6BB728
 
 .cassandra-troy.bespoke-backdrop
   transform translate3d(10%, 0, 0) scale3d(.75,1, 1)
@@ -660,6 +683,54 @@ full-dimension-backdrop(repeat)
 .threed-hardware-generation-4.bespoke-backdrop-active
   background-image url(../images/duke-nuken-3d.png)
   full-dimension-backdrop(false)
+
+
+//
+// // If you get a timeout, decrease $n, $m or $p
+// // Otherwise, you could even try increasing them
+// $n = 7
+// // colour branches (8 in the image)
+// $m = 3
+// // colour repetitions (4 in the image)
+// $p = 26
+// // dots on each "arm"
+// $d = 0.125em
+// $c = 0.25
+// // cutoff; between 0 and 1
+// $sh = ()
+// $sh2 = ()
+// for $i in (0)..(($n * $m) - 1)
+//   $beta = $i * 2 * PI / ($n * $m)
+//   $x = 0
+//   for $j in (1)..($p)
+//     $gamma = $j * 2 * PI / $p
+//     $s = 7.5 * ($c * $p - $j) * ($j - (1 + $c / 4) * $p) / ((0.5 + $c) * $p) ** 2
+//     if $j < $c * $p
+//       $s = 0
+//     $x = $x + 1.65 * ($s + 1) * $d
+//     $y = $x * sin($gamma) / 5
+//     $x1 = $x * cos($beta) - $y * sin($beta)
+//     // change of coords
+//     $y1 = $x * sin($beta) + $y * cos($beta)
+//     $x2 = $x * cos($beta + $gamma)
+//     $y2 = $x * sin($beta + $gamma)
+//     $sh = $sh, $x1 $y1 0 $s * $d hsl($i * 360 / $n, 100%, 50%)
+//     $sh2 = $sh2, $x2 $y2 0 $d / 2 hsl($i * 360 / $n, 100%, 50%)
+// .dogue
+//   position: absolute
+//   top: 50%
+//   left: 50%
+//   margin: (- $d / 2)
+//   width: $d
+//   height: $d
+//   border-radius: 50%
+//   box-shadow: $sh
+//   background: black
+//   animation: ani 2s ease-in-out infinite alternate
+// @keyframes
+//   to
+//     box-shadow: $sh2
+//
 
 
 @import './book.styl'
