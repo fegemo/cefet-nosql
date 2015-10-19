@@ -199,7 +199,7 @@
 # O Surgimento do NoSQL
 
 - Em 1998, Carlo Strozzi criou um banco de dados relacional de código aberto, mas que não usava SQL
-  - Mas isso não tem a ver o nossa aula ;)
+  - Mas isso não tem a ver com nossa aula ;)
 - Johan Oskarsson organizou uma [_meetup_](http://www.meetup.com/) para discutir sobre bancos de dados alternativos
   - BigTable e Dynamo haviam inspirado pessoas e organizações a criar bancos para escalar horizontalmente
   - Johan precisava de um nome (algo que desse **uma boa _#hashtag_**)

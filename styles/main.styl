@@ -450,6 +450,9 @@ $qr-container-bg-color = rgba(white, 0.85)
   & > svg
     height 100%
 
+.bespoke-slide.full-image-slide
+  img, & > p
+    height 100%
 
 // ------------------------------------------------------------
 // Slide backdrops
@@ -594,11 +597,15 @@ full-dimension-backdrop(repeat)
     bottom 1em
 
 .white.bespoke-backdrop
+.black.bespoke-backdrop
   transition none
 .white.bespoke-backdrop-active
+.black.bespoke-backdrop
   background-color white
   width 100%
   height 100%
+.black.bespoke-backdrop
+  background-color black
 
 .blog.bespoke-backdrop-active
   background-image url(../images/modeling-blog-erd.png)
@@ -731,6 +738,17 @@ full-dimension-backdrop(repeat)
 //   to
 //     box-shadow: $sh2
 //
+
+
+$slide-width = 800px
+$overview-slide-distance = 2000px
+$overview-space-between-slides = $overview-slide-distance / 83.333px
+.bespoke-overview
+  for i in 81..100
+    .bespoke-slide.bespoke-after-{i}
+      transform translate3d(i*($slide-width + $overview-space-between-slides), 0, - $overview-slide-distance)
+    .bespoke-slide.bespoke-before-{i}
+      transform translate3d(i*($slide-width + $overview-space-between-slides)*(-1), 0, - $overview-slide-distance)
 
 
 @import './book.styl'
