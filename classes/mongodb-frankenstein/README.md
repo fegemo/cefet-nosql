@@ -112,7 +112,7 @@ e manipulamos nossos dados**</p>
   - Os 3 primeiros têm uma característica em comum: são **orientados a
     agregados**
     - Vamos ver o que isso significa... mas primeiro, o que o
-      <span style="font-family: Ravie; color: gray;">cachorritos</span> tem
+      <span style="font-family: Ravie, Bangers, Comic Sans MS, cursive; color: gray;">cachorritos</span> tem
       a dizer sobre tudo isso?
 
 ---

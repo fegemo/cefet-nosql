@@ -105,14 +105,15 @@ window.deck = bespoke.from('article', [
   overview(),
   search(),
   tutorial(document.getElementsByClassName('tutorial')[0])
-  // ,
-  // function() {
-  //   var deck = arguments[0],
-  //     delayedScale = () => {
-  //       return scale(isMobile.any ? 'transform' : 'zoom')(deck);
-  //     };
-  //   setTimeout(delayedScale, 700);
-  // }
+  ,
+  function() {
+    var deck = arguments[0],
+
+      delayedScale = () => {
+        return scale(isMobile.any ? 'transform' : 'zoom')(deck);
+      };
+    if (isMobile.any) setTimeout(delayedScale, 700);
+  }
 ]);
 
 sleek();
