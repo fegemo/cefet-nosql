@@ -11,8 +11,8 @@ var bespoke = require('bespoke'),
     math = require('bespoke-math'),
     markdown = require('bespoke-meta-markdown'),
     backdrop = require('bespoke-backdrop'),
-    overview = require('bespoke-overview'),
-    search = require('bespoke-search'),
+    overview = require('bespoke-simple-overview'),
+    //search = require('bespoke-search'),
     qr = require('qr-image'),
     tutorial = require('./tutorial'),
     sleek = require('./sleek-menu');
@@ -102,8 +102,8 @@ window.deck = bespoke.from('article', [
   state(),
   backdrop(),
   bullets('.bespoke-slide:not(.no-bullet) ul:not(.no-bullet) li:not(.no-bullet), .bullet'),
-  overview(),
-  search(),
+  overview({ insertStyles: false }),
+  //search(),
   tutorial(document.getElementsByClassName('tutorial')[0])
   ,
   function() {
