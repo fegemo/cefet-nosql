@@ -13,7 +13,7 @@ var bespoke = require('bespoke'),
     backdrop = require('bespoke-backdrop'),
     overview = require('bespoke-simple-overview'),
     //search = require('bespoke-search'),
-    qr = require('qr-image'),
+    qrcode = require('bespoke-qrcode'),
     tutorial = require('./tutorial'),
     sleek = require('./sleek-menu');
 
@@ -78,23 +78,7 @@ window.deck = bespoke.from('article', [
       }
     });
   },
-  function () {
-    // qr code with link to current slide
-    var deck = arguments[0],
-      qrContainer = document.querySelector('#qr-container'),
-      imagesCache = {};
-    document.addEventListener('keydown', (e) => {
-      if (e.which == 81   // 'q'
-          && qrContainer
-          && !qrContainer.classList.contains('showing')) {
-        let image = imagesCache[location.href] || (imagesCache[location.href] = qr.imageSync(location.href, { type: 'svg' }));
-        qrContainer.innerHTML = image;
-        qrContainer.classList.add('showing');
-      } else if (qrContainer) {
-        qrContainer.classList.remove('showing');
-      }
-    });
-  },
+  qrcode(),
   touch(),
   hash(),
   progress(),
