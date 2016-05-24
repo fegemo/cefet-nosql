@@ -35,7 +35,7 @@ O sistema deve possuir, minimamente, duas telas:
 
 Você deve publicar seu site em algum serviço de hospedagem gratuito. A
 linguagem de _back-end_ usada para construir a aplicação web é livre, mas o
-bando de dados deve ser NoSQL. Você tem total liberdade para escolher, mas
+banco de dados deve ser NoSQL. Você tem total liberdade para escolher, mas
 procure algum serviço de hospedagem preferencialmente gratuito que ofereça a
 combinação de linguagem + banco de dados com que você pretende fazer o trabalho.
 
