@@ -1,34 +1,33 @@
 var fs = require('fs'),
-    gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    plumber = require('gulp-plumber'),
-    del = require('del'),
-    rename = require('gulp-rename'),
-    connect = require('gulp-connect'),
-    browserify = require('browserify'),
-    babelify = require('babelify'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    uglify = require('gulp-uglify'),
-    stylus = require('gulp-stylus'),
-    replace = require('gulp-replace'),
-    preprocess = require('gulp-preprocess'),
-    autoprefixer = require('gulp-autoprefixer'),
-    csso = require('gulp-csso'),
-    through = require('through'),
-    opn = require('opn'),
-    ghpages = require('gh-pages'),
-    changed = require('gulp-changed'),
-    path = require('path'),
-    merge = require('merge-stream'),
-    isDist = process.argv.indexOf('serve') === -1;
+  gulp = require('gulp'),
+  gutil = require('gulp-util'),
+  plumber = require('gulp-plumber'),
+  del = require('del'),
+  rename = require('gulp-rename'),
+  connect = require('gulp-connect'),
+  browserify = require('browserify'),
+  source = require('vinyl-source-stream'),
+  buffer = require('vinyl-buffer'),
+  uglify = require('gulp-uglify'),
+  stylus = require('gulp-stylus'),
+  replace = require('gulp-replace'),
+  preprocess = require('gulp-preprocess'),
+  autoprefixer = require('gulp-autoprefixer'),
+  csso = require('gulp-csso'),
+  through = require('through'),
+  opn = require('opn'),
+  ghpages = require('gh-pages'),
+  changed = require('gulp-changed'),
+  path = require('path'),
+  merge = require('merge-stream'),
+  isDist = process.argv.indexOf('serve') === -1;
 
 gulp.task('js', function() {
   return browserify({
-      entries: 'scripts/main',
-      extensions: ['.js', '.json', '.js.es6'],
-      debug: !isDist
-    })
+    entries: 'scripts/main',
+    extensions: ['.js', '.json'],
+    debug: !isDist
+  })
     .transform('babelify')
     .transform('debowerify')
     .bundle()
@@ -171,8 +170,9 @@ function getFolders(cwd, dir) {
     });
 }
 
-gulp.task('build', ['js', 'html', 'md', 'css', 'css-classes', 'images', 'videos', 'attachments', 'samples', 'favicon'], function() {
-  var folders = getFolders('.', 'classes').concat(getFolders('.', 'assignments')),
+gulp.task('build', ['js', 'html', 'md', 'css', 'css-classes', 'images',
+  'videos', 'attachments', 'samples', 'favicon'], function() {
+    var folders = getFolders('.', 'classes').concat(getFolders('.', 'assignments')),
       tasks = folders.map(function(folder) {
         var t = [];
         t.push(gulp.src(['html/index.html'])
@@ -183,8 +183,9 @@ gulp.task('build', ['js', 'html', 'md', 'css', 'css-classes', 'images', 'videos'
           .pipe(gulp.dest(path.join('dist', folder, 'fonts'))));
         return merge(t);
       });
-  return merge(tasks);
-});
+    return merge(tasks);
+  }
+);
 
 gulp.task('connect', ['build'], function(done) {
   connect.server({
