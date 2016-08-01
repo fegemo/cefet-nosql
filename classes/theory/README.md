@@ -43,8 +43,8 @@
 
 - Bancos **NoSQL não possuem _views_**, mas podem ter consultas
   pré-computadas e armazenadas
-  - Podemos pensar que, nesses bancos, devemos **fazer o `JOIN` em tempo de
-    inserção, e não em tempo de consulta**
+  - Podemos pensar que, nesses bancos, devemos **<u>fazer o `JOIN` em tempo de
+    inserção</u>, e não em tempo de consulta**
 - Este é um aspecto fundamental dos bancos orientados a agregados
   - Já que algumas consultas não se encaixam bem na estrutura agregada
 - Normalmente, **_views_ materializadas são criadas** e mantidas usando
@@ -159,12 +159,13 @@
 - Relacionamentos têm tipos e direção de significado
 - Relacionamentos têm nomes, que possibilitam navegar pelo grafo
 - Bancos de grafos permitem consultar, _e.g._:
-  - Liste todos os clientes que compraram o livro "A Torre Negra"
+  - Liste todos os clientes que compraram o livro "A Torre Negra" e mandaram
+    entregar fora dos EUA
 
 ---
 ## Exercício em Sala
 
-- Vamos fazer a modelagem do blog em um banco com modelo de documentos
+- Vamos fazer a **modelagem do _blog_** em um banco com **modelo de documentos**
 - Considere as entidades:
   <ul class="multi-column-list-3">
     <li>_Post_</li>
