@@ -78,16 +78,16 @@ window.deck = bespoke.from('article', [
       }
     });
   },
-  qrcode(),
   touch(),
+  overview({ insertStyles: false }),
+  bullets('.bespoke-slide:not(.no-bullet) ul:not(.no-bullet) li:not(.no-bullet), .bullet'),
   hash(),
   progress(),
   math(),
   state(),
   backdrop(),
-  bullets('.bespoke-slide:not(.no-bullet) ul:not(.no-bullet) li:not(.no-bullet), .bullet'),
-  overview({ insertStyles: false }),
   //search(),
+  qrcode(),
   tutorial(document.getElementsByClassName('tutorial')[0])
   ,
   function() {

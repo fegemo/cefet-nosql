@@ -9,7 +9,8 @@ var fs = require('fs'),
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
   sourcemaps = require('gulp-sourcemaps'),
-  uglify = require('gulp-uglify'),
+  minifier = require('gulp-uglify/minifier'),
+  uglify = require('uglify-js-harmony'),
   stylus = require('gulp-stylus'),
   replace = require('gulp-replace'),
   preprocess = require('gulp-preprocess'),
@@ -33,7 +34,7 @@ gulp.task('js', function() {
     .pipe(source('build.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(isDist ? uglify() : through())
+      .pipe(isDist ? minifier({}, uglify) : through())
       .on('error', gutil.log)
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist/build'))
@@ -146,7 +147,7 @@ gulp.task('build', ['js', 'html', 'md', 'css', 'css-classes', 'images',
   }
 );
 
-gulp.task('deploy', ['build'], function(done) {
+gulp.task('deploy', function(done) {
   ghpages.publish(path.join(__dirname, 'dist'), { logger: gutil.log }, done);
 });
 
