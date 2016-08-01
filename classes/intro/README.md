@@ -66,12 +66,19 @@
 ---
 ## Descompaso de Impedância (cont.)
 
-- A frustração dos desenvolvedores era grande
-  - Na década de 90, chegou-se a pensar que os RDBMSs seriam substituídos por bancos de dados que replicassem a estrutura _in-memory_ no disco
+- A **frustração dos desenvolvedores** era grande
+  - Na década de 90, chegou-se a pensar que os RDBMSs seriam
+    substituídos por bancos de dados que replicassem a estrutura
+    _in-memory_ no disco
   - Linguagens orientadas a objeto em crescimento
-  - Ideia: bancos de dados orientados a objetos (<abbr title="Object Oriented Database Management System">OODBMS</abbr>)
-    - _e.g._, ObjectStore: _"Objects can be created in a database by overloading the operator `new()`"_
-      - [Artigo na _Communications of the ACM_](http://dl.acm.org/citation.cfm?doid=125223.125244) descrevendo o funcionamento  
+  - Ideia: bancos de dados orientados a objetos (<abbr title="Object
+    Oriented Database Management System">OODBMS</abbr>)
+    - _e.g._, ObjectStore: _"Objects can be created in a database
+      by overloading the operator `new()`"_
+      - [Artigo na _Communications of the ACM_][object-store-article] (1991)
+      descrevendo o funcionamento  
+
+[object-store-article]: http://dl.acm.org/citation.cfm?doid=125223.125244
 
 ---
 ## Amenizando o Descompasso
@@ -83,7 +90,8 @@
   - Divisão do trabalho entre desenvolvedor e DBAs
 - Nova ideia para reduzir o descompasso de impedância: **mapeamento
   objeto-relacional**
-  - Hibernate, ~~iBATIS~~[MyBATIS](http://blog.mybatis.org/)
+  - ![right](../../images/hibernate-entity-class.png)
+    Hibernate, ~~iBATIS~~[MyBATIS](http://blog.mybatis.org/)
 - Apesar de ajudar muito, ainda há o problema do mapeamento
   - _e.g._, ao se esquecer que o banco é relacional, tende-se a criar
     consultas caras
@@ -96,13 +104,16 @@
 # **Quantos** bancos de dados devo ter?
 
 ---
+<!--
+  transition: transition-fade
+-->
 
 ![](../../images/types-of-use-of-databases.png)
 
 ---
 <!--
   backdrop: types-of-use-of-databases
-  classes: no-bulletasdfadsf
+  classes: no-bullet
 -->
 
 <div class="layout-split-2" style="height: auto;">
@@ -252,7 +263,7 @@ e manipulamos nossos dados**</p>
   - O modelo relacional usa **relações (tabelas) e tuplas (linhas/registros)**
   - Modelos NoSQL são divididos em 4 grandes tipos:
     1. _key-value_ (chave-valor)
-    1. _documents_ (documentos)
+    1. _document_ (documentos)
     1. _column-family_ (famílias de colunas)
     1. _graph_ (grafo)
   - Os 3 primeiros têm uma característica em comum: são **orientados a
@@ -403,7 +414,7 @@ relacionados que queremos **tratar de forma unitária**</p>
   - Um pedido (_Order_) tem uma lista de itens (_OrderItem_)
 - Desnormalização
   - Um mesmo endereço "Chicago" apareceu (e foi armazenado) 3x
-- Relação implícita entre os 2 agregados: via um campo (a prior qualquer)
+- Relação implícita entre os 2 agregados: via um campo (_a priori_ qualquer)
   `"customerId"` em _Order_
 
 <p class="note">**Importante:** não há apenas uma forma para definir **a
@@ -505,11 +516,15 @@ get('1234', 'name');
 ## Tipo: **_Graph_**
 
 - Um peixe fora d'água no laguinho NoSQL
-- Mas os banco relacionais não são feitos de relacionamentos ?
-  - Custoso (JOIN é uma operação cara)
-  - Inserções comprometidas
-  - Buscas complexas
-- Dados simples (pequenos), mas muitas ligações entre eles
+- Mas os banco relacionais não são feitos de relacionamentos?
+  - Sim, porém eles são:
+    - Custosos (JOIN é uma operação cara)
+    - Inserções comprometidas
+    - Buscas complexas
+- Em bancos de grafos:
+  - Dados simples (pequenos)
+  - Muitas ligações entre eles
+  - Bom para "responder perguntas complexas"
 
 ---
 ![](../../images/graph-scheme.png)
