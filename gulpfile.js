@@ -22,7 +22,7 @@ var fs = require('fs'),
   changed = require('gulp-changed'),
   path = require('path'),
   merge = require('merge-stream'),
-  isDist = process.argv.indexOf('serve') === -1;
+  isDist = process.argv.indexOf('dev') === -1;
 
 gulp.task('js', function() {
   return browserify({
@@ -151,7 +151,7 @@ gulp.task('deploy', function(done) {
   ghpages.publish(path.join(__dirname, 'dist'), { logger: gutil.log }, done);
 });
 
-gulp.task('serve', ['watch', 'build'], function(done) {
+gulp.task('dev', ['watch', 'build'], function(done) {
   const port = 8082;
   connect.server({
     root: ['dist'],
@@ -172,5 +172,3 @@ gulp.task('watch', function() {
   gulp.watch('images/**/*', ['images']);
   gulp.watch(['scripts/**/*.js', 'scripts/**/*.js.es6'], ['js']);
 });
-
-gulp.task('default', ['serve']);
