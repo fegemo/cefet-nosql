@@ -32,9 +32,9 @@
 ---
 ## O que é um Banco de Documentos
 
-- Eles armazenam documentos como o a parte **valor** dos bancos _key-value_,
+- Eles armazenam documentos como a parte **valor** dos bancos _key-value_,
   sendo que os documentos:
-  - São indexados usando uma _BTree_
+  - São indexados usando uma [árvore B][btree]
   - São consultados usando API para linguagens (não há SQL)
 - Considere um banco de documentos como um _key-value_ onde o _value_ é
   examinável pelo banco (`WHERE`)
@@ -46,6 +46,8 @@
 | table                       | collection           |
 | row                         | document             |
 | rowid                       | _id                  |
+
+[btree]: https://pt.wikipedia.org/wiki/%C3%81rvore_B
 
 ---
 ## Exemplo: **Coleção** de viajantes
@@ -78,7 +80,7 @@
 # Alguns Bancos de Documentos
 
 - [**MongoDB**](https://www.mongodb.org/)
-  - JSON, API com drivers, _auto-sharding_
+  - JSON, API com drivers, _auto-sharding_, MapReduce
 - [CouchDB](http://couchdb.apache.org/)
   - JSON, JavaScript para MapReduce e acesso via HTTP
 - [RethinkDB](https://www.rethinkdb.com/)
@@ -402,7 +404,6 @@ r.table('tv_shows')
       <li>**Desempenho para leitura** (muito) melhor </li>
       <li>É possível **alterar** dados de forma **atômica**</li>
       <li>Requer **mais espaço**</li>
-      <li>Pode causar **incosistência**</li>
     </ul>
   </section>
   <section>
@@ -477,11 +478,11 @@ r.table('tv_shows')
 ---
 ## Voltando às **consultas** (2/2)...
 
-- Um _match_ exato:
+- Um _match_ exato de um "subdocumento":
   ```js
-  db.inventory.find({ producer: {company: 'ABC', address: '123' }})
+  db.inventory.find({ producer: {company: 'ABC', address: 'a' }})
   ```
-- Campos individuais:
+- Campos individuais de um subdocumento:
   ```js
   db.inventory.find({ 'person.company': 'ABC' });
   ```
