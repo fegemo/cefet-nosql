@@ -569,9 +569,9 @@ r.table('tv_shows')
 - Um conjunto de réplicas é um grupo de instâncias de `mongod` que
   armazenam o mesmo _dataset_
 - O `mongod` **primário recebe todas** solicitações de **escrita**
-- Os `mongod` **secundários sincronizam com o primário** e <u>podem*</u> recebem
+- Os `mongod` **secundários sincronizam com o primário** e <u>podem¹</u> recebem
   solicitações de **leitura**
-  - * não é o comportamento padrão
+  - ¹ não é o comportamento padrão
   - Se o primário falha, os secundários auto-elegem um novo primário
 
 ---
