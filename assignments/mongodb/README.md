@@ -22,13 +22,20 @@ Para fazer esta atividade, você vai precisar:
 
 ¹ Para verificar se está instalado, procure na pasta "Arquivos de Programas"
 se uma pasta "MongoDB" existe:
-  `C:\Program Files\MongoDB\Server\3.0\bin`
+  `C:\Program Files\MongoDB\Server\3.X\bin`
+
+Nos laboratórios do CEFET, é preciso:
+1. Criar a pasta `C:/data/db` (onde o MongoDB armazenará os dados)
+1. Executar o `mongod` manualmente
+1. Adicionar uma exceção ao _firewall_ do Windows
+  (pode pedir senha de administrador, pergunte ao
+    professor)
 
 ## Entrega do Exercício
 
 Você deve entregar, no Moodle, um documento `.pdf` contendo os entregáveis de
 cada um dos exercícios abaixo. Você pode usar um editor de texto como o Word ou
-Writer.
+Writer. **Não copie seu exercício de outra pessoa!!**
 
 ---
 ## Exercício 1: **Importando um _dataset_**
@@ -144,17 +151,3 @@ Você deve fazer as seguintes consultas na coleção `restaurants`:
 ### Entrega
 
 O comando executado para realizar cada consulta.
-
----
-## Exercício 5: Índices
-
-Surgiu uma demanda para poder fazer uma consulta filtrando por bairros (`"borough"`). Para acelerar essas consultas, você deve criar um índice usando esse campo.
-
-### Entrega
-
-Você deve entregar:
-
-1. O comando para fazer a consulta
-1. O tempo gasto para executar a consulta **antes de criar o índice**
-1. O comando para criar o índice
-1. O tempo gasto para executar a consulta **depois de criar** o índice
