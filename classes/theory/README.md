@@ -339,14 +339,13 @@
   dados em servidores diferentes (_sharding_)
 - O conceito de _sharding_ não é novidade do NoSQL - já existia antes
   - Contudo, era controlado pela aplicação e não pelo próprio banco
-  - Consistia em (_e.g._) colocar todos os clientes cujo nome começa com A-D
-    em um _shard_, E-G em outro...
-
+- Consistia em (_e.g._) colocar todos os clientes cujo nome começa com A-D
+  em um _shard_, E-G em outro...
 ---
 ## Modelo: **_Sharding_** (2)
 
 - _Sharding_ controlado pela aplicação torna o modelo de programação
-  mais complexo já que <u>o código da aplicação</u> precisa distribuir a carga
+  mais complexo já que o código da aplicação precisa distribuir a carga
   entre os _shards_
 - Idealmente, cada usuário deveria acessar um servidor diferente e apenas um
   servidor
@@ -364,20 +363,19 @@
     estarão todos em um nó (_shard_) que está na região Norte do Brasil
 
 ---
-## _Sharding_ e <u>NoSQL</u>
+## _Sharding_ e NoSQL
 
-- Em geral, muitos bancos NoSQL oferecem **_auto-sharding_**
+- Em geral, muitos bancos NoSQL oferecem _auto-sharding_
 - Isso torna muito mais fácil usar essa técnica de distribuição em uma aplicação
-- _Sharding_ melhora muito o desempenho porque **melhora os <u>tempos
-  de leitura</u> e <u>escrita</u>**
+- _Sharding_ melhora muito o desempenho porque **melhora os tempos de leitura e
+  escrita**
   - Já que **cada nó é responsável tanto pela escrita quando pela leitura
     de seus agregados**
 
 ---
-## _Sharding_ e <u>Resiliência</u>
+## _Sharding_ e Resiliência
 
-- **_Sharding_ <u>faz pouco pela resiliência</u> dos dados** quando
-  usado sozinho
+- **_Sharding_ faz pouco pela resiliência dos dados** quando usado sozinho
   - Já que dados diferentes estão em cada nó, **a perda de um servidor faz com
     que seus dados fiquem indisponíveis**
 - Assim, na prática, fazer **apenas _sharding_ pode até reduzir a resiliência**
@@ -429,10 +427,9 @@
 ---
 ## Replicação _Master-Slave_ (4)
 
-- Replicação _master-slave_ introduz a possibilidade de **problemas de
-  consistência**
-  - Aplicações lendo de _slaves_ podem <u>receber dados ainda não
-    atualizados</u>
+- Replicação _master-slave_ introduz a possibilidade de problemas de
+  consistência
+  - Aplicações lendo de _slaves_ podem receber dados ainda não atualizados
 
 ---
 ## Replicação **_Peer-to-Peer_**
@@ -458,17 +455,17 @@
 - Adicionar novos nós para escalar horizontalmente é simples
 - O custo disso é cobrado na consistência
 - Ao podermos escrever em qualquer nó, aumentamos a possibilidade de gerar
-  **inconsistências na escrita**
+  inconsistências na escrita
   - _E.g._, dois+ clientes reservando o mesmo quarto de hotel
-  - Contudo, é possível mitigar esse problema...
+  - Contudo, é possível mitigar esse problema
 
 ---
 ## Usando **_Sharding_ + Replicação**
 
 - _Master-slave_ + _Sharding_: múltiplos _masters_, mas **cada item tem
   apenas 1 master**
-  - Um nó pode ser _master_ para um _dataset_ e _slave_ para outro
-- _Peer-to-peer_ + _Sharding_: cada _dataset_ está presente (tipicamente)
+  - Um nó pode ser _master_ para um dataset e _slave_ para outro
+- _Peer-to-peer_ + _Sharding_: cada dataset está presente (tipicamente)
   em 3 nós replicados
   - O **fator de replicação** 3 é normalmente usado
 
@@ -477,7 +474,7 @@
   backdrop: white
 -->
 
-## Exemplo: _cluster_ com 6 nós
+## _Master-slave_ + _Sharding_
 
 ![](../../images/sharding-and-master-slave-repl.png)
 
@@ -509,8 +506,8 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
       banco relacional
   - Vários servidores
     - Todas as pessoas podem efetivamente adquirir a reserva
-  - Há uma diferença entre uma **<u>transação de negócio</u> e uma <u>transação
-    técnica</u>**
+  - Há uma diferença entre uma **transação de negócio e uma transação
+    técnica**
 
 ---
 ## Consistência de Escrita
@@ -520,7 +517,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
   - Único servidor: serializa as escritas e as aplica em sequência
     - Uma delas será sobrescrita
 - Controle de concorrência pode ser feito de forma pessimista ou otimista
-  - Abordagem **<u>pessimista</u> tranca o _dataset_** para prevenir conflitos
+  - Abordagem **<u>pessimista</u> tranca o dataset** para prevenir conflitos
   - Abordagem **<u>otimista</u> detecta conflitos e os corrige**
     - Pode usar uma **atualização condicional**: verifica se o valor corrente
       no momento da atualização é o mesmo valor recuperado durante leitura
@@ -573,7 +570,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
 
 ## Consistência de Leitura (3)
 
-- O problema de inconsistência de leitura fica **maior quando há replicação**:
+- O problema de inconsistência de leitura fica **maior quando há replicação**
 
 ![](../../images/consistency-read-read.png)
 
@@ -581,7 +578,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
 ## Consistência de Leitura (4)
 
 - Eventualmente, os nós terão propagado totalmente as atualizações
-  - A esta característica damos o nome de **eventualmente consistente**
+  - A esta característica, demos o nome de **eventualmente consistente**
 - A configuração de consistência não é "global" na aplicação
   - Cada tipo de requisição pode ser configurado da melhor forma
     (_strong/weak_)
@@ -611,26 +608,22 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
   alta disponibilidade**
   - Exemplo: **carrinho de compra** (DynamoDB da Amazon):
     - Cliente sempre pode colocar produtos ao carrinho (_availability_)
-    - Problemas na rede podem gerar múltiplos carrinhos por cliente
+    - Problemas na rede podem gerar múltiplis carrinhos por cliente
     - No processo de fechamento, carrinho é mesclado e cliente pode revisá-lo
-      (e corrigir os conflitos)
   - Exemplo: **hotel** permitir _overbooking_
 
 ---
 ## Afrouxando **Durabilidade**
 
-- Alguns bancos de dados podem trocar alta durabilidade por maior
-  disponibilidade
-  - Por exemplo, bancos que são _in-memory_ (Memcached, Redis)
-  - E.g., a cada X segundos um _backup_ é realizado em disco
+- Alguns bancos podem trocar alta durabilidade por maior disponibilidade
+  - Por exemplo, bancos que são _in-memory_ (Memcached, Redis etc.)
+  - De tempos em tempos (_e.g._, segundos) um _backup_ é realizado em disco
 - Aí vem a pergunta: qual a utilidade de um banco que pode perder seus dados?
   - Dependendo do domínio, uma possível perda (servidor desligou abruptamente)
     pode ser suportada
     - Exemplo: lista de visitantes online, sessão de usuário
-
-<div class="bullet" style="width: 84%;"><p class="note">A ideia é que perder
-  os dados de alguns eventualmente é um <u>mal menor</u> do
-  que ter um sistema lento (indisponível) para todos</p></div>
+- A ideia é que perder os dados de alguns eventualmente é um mal menor do
+  que ter um sistema lento (indisponível) para todos
 
 ---
 <!--
@@ -643,19 +636,19 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
 ## Agregados e _Clusters_
 
 - Bancos orientados a agregados mudam as regras de armazenamento (CAP)
-- Mas **executar em _clusters_** também muda o **modelo computacional**
+- Mas executar em _clusters_ também muda o modelo computacional
 - Quando dados estão distribuídos em nós de um _cluster_, podemos
   (devemos) processá-los de forma distribuída (paralela)
 
 ---
 ## Processamento no Servidor _vs_ no Cliente
 
-- Quando há **apenas 1 servidor**, dados podem ser processados no próprio
-  servidor ou em um cliente:
-  1. No cliente (aplicação):
+- Em apenas 1 servidor, dados podem ser processados no próprio servidor ou
+  em um cliente
+  1. No cliente
     - Pros: flexibilidade e linguagens de programação
     - Cons: transferência de dados do servidor para cliente
-  1. No servidor:
+  1. No servidor
     - Pros: localidade dos dados
     - Cons: linguagens e dificuldade/impossibilidade de _debugging_
 
@@ -663,22 +656,19 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
 ## Computação no _Cluster_
 
 - Podemos distribuir a computação pelo _cluster_
-- Contudo, devemos tentar **reduzir a <u>quantidade de dados transferidos</u>
-  pela rede**
-- Devemos <u>preservar a localidade</u> da computação
+- Contudo, devemos tentar reduzir a quantidade de dados transferidos pela
+  rede
+- Devemos preservar a localidade da computação
   - Isto é, processar dados no mesmo nó onde estão armazenados
 
 ---
 ## Padrão: **_Scatter-Gather_**
 
-- Podemos usar um padrão de integração de aplicações chamado
-  [_scatter-gather_][scatter-gather]
-- A ideia é **transmitir** uma mensagem para **múltiplos destinatários** e
-  depois **reunir** (ou combinar) as respostas de volta em uma única mensagem
+- Podemos usar um padrão de integração chamado _scatter-gather_
+- A ideia é transmitir uma mensagem para múltiplos destinatários e depois
+  reunir as respostas de volta em uma única mensagem
 
 ![](../../images/scatter-gather-example.png)
-
-[scatter-gather]: http://www.enterpriseintegrationpatterns.com/patterns/messaging/BroadcastAggregate.html
 
 ---
 ## **_Map-Reduce_**
@@ -693,10 +683,6 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
     sistema de _Map-Reduce_
 
 ---
-<!--
-  backdrop: white-noise
--->
-
 ## **_Map-Reduce_**: etimologia
 
 - Nome inspirado nas funções `map` e `reduce` de linguagens funcionais
@@ -710,10 +696,6 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
     ```
 
 ---
-<!--
-  backdrop: white-noise
--->
-
 ## **_Map-Reduce_**: etimologia (2)
 
 - Nome inspirado nas funções `map` e `reduce` de linguagens funcionais
@@ -794,7 +776,7 @@ _"Bancos relacionais são ACID, logo não preciso me preocupar com consistência
   Dado que temos uma coleção de pedidos (_orders_) que estão _sharded_
   no _cluster_, como podemos gerar um relatório que retorna o **quanto
   cada cliente gastou na minha loja**?
-  - Considere esta **coleção de pedidos** &rarr;
+  - Considere esta **coleção de pedidos**:
   - Além disso, vamos considerar apenas os **pedidos aprovados** (status == "A")
 
 ---

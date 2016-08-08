@@ -13,11 +13,11 @@ _Professor:_ [Flávio Coutinho](mailto:coutinho@decom.cefetmg.br)
   - 18:50 - 20:30: [Introdução a NoSQL](classes/intro/) (31/08/2015)
   - 20:50 - 22:30: [Teoria (Distribuição, CAP, _Map-Reduce_)](classes/theory/) (1ª parte)
 - Aula 2: (08/08/2016)
-  - 18:50 - 20:30: Teoria (Distribuição, CAP, _Map-Reduce_) ([2ª parte](classes/theory/#25))
+  - 18:50 - 20:30: [Teoria (Distribuição, CAP, _Map-Reduce_)](classes/theory/) (2ª parte)
   - 20:50 - 22:30: [_Document Stores_](classes/document/) ([Prática 1 MongoDB][activity-mongodb1])
 - Aula 3: (22/08/2016)
   - 18:50 - 20:30: [_Key-Value Stores_](classes/keyvalue/)
-  - 20:50 - 22:30: _Document Stores_ ([restim](classes/document/#47)) ([Prática 2 MongoDB][activity-mongodb2])
+  - 20:50 - 22:30: [Prática 2 MongoDB][activity-mongodb2]
 - Aula 4: (29/08/2016)
   - 18:50 - 20:30: [_Column-Family_](classes/columnfamily/)
   - 20:50 - 22:30: [Seminário][seminar]

@@ -32,9 +32,9 @@
 ---
 ## O que é um Banco de Documentos
 
-- Eles armazenam documentos como a parte **valor** dos bancos _key-value_,
+- Eles armazenam documentos como o a parte **valor** dos bancos _key-value_,
   sendo que os documentos:
-  - São indexados usando uma [árvore B][btree]
+  - São indexados usando uma _BTree_
   - São consultados usando API para linguagens (não há SQL)
 - Considere um banco de documentos como um _key-value_ onde o _value_ é
   examinável pelo banco (`WHERE`)
@@ -46,8 +46,6 @@
 | table                       | collection           |
 | row                         | document             |
 | rowid                       | _id                  |
-
-[btree]: https://pt.wikipedia.org/wiki/%C3%81rvore_B
 
 ---
 ## Exemplo: **Coleção** de viajantes
@@ -80,7 +78,7 @@
 # Alguns Bancos de Documentos
 
 - [**MongoDB**](https://www.mongodb.org/)
-  - JSON, API com drivers, _auto-sharding_, MapReduce
+  - JSON, API com drivers, _auto-sharding_
 - [CouchDB](http://couchdb.apache.org/)
   - JSON, JavaScript para MapReduce e acesso via HTTP
 - [RethinkDB](https://www.rethinkdb.com/)
@@ -404,6 +402,7 @@ r.table('tv_shows')
       <li>**Desempenho para leitura** (muito) melhor </li>
       <li>É possível **alterar** dados de forma **atômica**</li>
       <li>Requer **mais espaço**</li>
+      <li>Pode causar **incosistência**</li>
     </ul>
   </section>
   <section>
@@ -478,11 +477,11 @@ r.table('tv_shows')
 ---
 ## Voltando às **consultas** (2/2)...
 
-- Um _match_ exato de um "subdocumento":
+- Um _match_ exato:
   ```js
-  db.inventory.find({ producer: {company: 'ABC', address: 'a' }})
+  db.inventory.find({ producer: {company: 'ABC', address: '123' }})
   ```
-- Campos individuais de um subdocumento:
+- Campos individuais:
   ```js
   db.inventory.find({ 'person.company': 'ABC' });
   ```
@@ -570,9 +569,9 @@ r.table('tv_shows')
 - Um conjunto de réplicas é um grupo de instâncias de `mongod` que
   armazenam o mesmo _dataset_
 - O `mongod` **primário recebe todas** solicitações de **escrita**
-- Os `mongod` **secundários sincronizam com o primário** e <u>podem*</u> recebem
+- Os `mongod` **secundários sincronizam com o primário** e <u>podem¹</u> recebem
   solicitações de **leitura**
-  - * não é o comportamento padrão
+  - ¹ não é o comportamento padrão
   - Se o primário falha, os secundários auto-elegem um novo primário
 
 ---
