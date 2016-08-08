@@ -616,43 +616,14 @@ full-dimension-backdrop(repeat)
   background-size contain
   background-position 50% 50%
 
-
-.bespoke-slide[data-bespoke-backdrop="raytraced-teapot"]
-  color white
-
-.cpp-vs-java.bespoke-backdrop-active
-  background-image url(../images/cpp-vs-java.jpg)
+.white-noise.bespoke-backdrop-active
+  background-image url(../images/white-noise2.gif)
   full-dimension-backdrop(false)
+  background-size cover
+  background-position 50% 50%
+  opacity 0.2
 
-.bespoke-slide[data-bespoke-backdrop="cpp-vs-java"]
-  h1
-    color #37A956
-    text-shadow 1px 1px darken(#37A956, 75%)
 
-.ninokuni.bespoke-backdrop-active
-  background-image url(../images/ni-no-kuni.jpg)
-  full-dimension-backdrop(false)
-
-.bespoke-slide[data-bespoke-backdrop="ninokuni"],
-.bespoke-slide[data-bespoke-backdrop="wind-waker-raytraced"]
-  h1
-    text-shadow 1px 1px black
-    background-color rgba(white,.5)
-    padding .3em
-    border-radius 10px
-    transition opacity 200ms ease-out
-    &:hover
-      background-color rgba(white, 0)
-      opacity 0
-
-.wind-waker-raytraced.bespoke-backdrop-active
-  background-image url(../images/zelda-ww-raytracing.jpg)
-  full-dimension-backdrop(false)
-  background-position-y 100%
-
-.wind-waker-raytraced-2.bespoke-backdrop-active
-  background-image url(../images/zelda-ww-raytracing-2.jpg)
-  full-dimension-backdrop(false)
 
 
 
@@ -665,22 +636,6 @@ full-dimension-backdrop(repeat)
   }
 }
 
-
-.threed-hardware-generation-1.bespoke-backdrop-active
-  background-image url(../images/duke-nuken-3d.png)
-  full-dimension-backdrop(false)
-
-.threed-hardware-generation-2.bespoke-backdrop-active
-  background-image url(../images/resident-evil-2-1998.jpg)
-  full-dimension-backdrop(false)
-
-.threed-hardware-generation-3.bespoke-backdrop-active
-  background-image url(../images/max-payne-2001.jpg)
-  full-dimension-backdrop(false)
-
-.threed-hardware-generation-4.bespoke-backdrop-active
-  background-image url(../images/duke-nuken-3d.png)
-  full-dimension-backdrop(false)
 
 
 //
@@ -740,7 +695,6 @@ $overview-space-between-slides = $overview-slide-distance / 83.333px
       transform translate3d(i*($slide-width + $overview-space-between-slides), 0, - $overview-slide-distance)
     .bespoke-slide.bespoke-before-{i}
       transform translate3d(i*($slide-width + $overview-space-between-slides)*(-1), 0, - $overview-slide-distance)
-
 
 @import './book.styl'
 
