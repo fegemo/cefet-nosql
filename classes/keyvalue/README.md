@@ -145,13 +145,13 @@
   como um _RESTful WebService_:
   - Operações:
     ```
-    GET /buckets/BUCKET/keys/KEY
-    PUT|POST /buckets/BUCKET/keys/KEY
-    DELETE /buckets/BUCKET/keys/KEY
+    GET /buckets/NOME_BUCKET/keys/KEY
+    PUT|POST /buckets/NOME_BUCKET/keys/KEY
+    DELETE /buckets/NOME_BUCKET/keys/KEY
     ```
     - Exemplo:
       ```
-      curl -i http://localhost:8098/buckets/session/keys/a7e618d9
+      curl -i http://localhost/buckets/session/keys/a7e618d9
       ```
 - Um _whitepaper_ oficial do Riak: [Bancos relacionais _vs_ Riak](http://info.basho.com/rs/721-DGT-611/images/Relational%20to%20RiakKV.PDF)
 
@@ -180,9 +180,9 @@
 ## Funcionalidades Principais
 
 - Vamos fazer:
-  - Usuários postam atualizações (_tweets_)
-  - Usuários seguem/deixam de seguir outros
-  - Usuários podem ver uma _timeline_ de atualizações
+  - Usuários **postam atualizações** (_tweets_)
+  - Usuários seguem/deixam de **seguir** outros
+  - Usuários podem ver uma **_timeline_ de atualizações**
 - Fica para a próxima:
   - Usuários podem mencionar outros em suas atualizações
   - Usuários podem enviar mensagens privadas a outros
@@ -193,13 +193,13 @@
 ![right](../../images/redis.svg)
 
 - Banco de _key-value_ em que o _value_ não precisa ser apenas um _blob_
-  - Pode ser uma de 5_ish_  estruturas de dados
+  - Pode ser uma de ~5  estruturas de dados
 - Banco em memória, com possibilidade de persistência
 - Extremamente rápido e versátil
 - Código aberto, grande comunidade
 
 ---
-## Tipos Estruturas de Dados no Redis
+## Tipos de Dados no Redis
 
 ![](../../images/redis-tipos-de-dados.png)
 
@@ -210,32 +210,42 @@
 
 - **Salvar** um par _key-value_
   ```
-  SET foo bar
+  SET usuario_admin coutinho
   ```
 - **Ler** um valor (_value_) usando sua chave (_key_)
   ```
-  GET foo => bar
+  GET usuario_admin => coutinho
   ```
 - **Excluir** um par _key-value_
   ```
-  DEL foo
+  DEL usuario_admin
   ```
 
 ---
-## <abbr title="Command Line Interface">CLI</abbr> do Redis (2)
+# <abbr title="Command Line Interface">CLI</abbr> do Redis (2)
+
+- Exemplo útil
+  ```
+  SET usuarios:nome:1000 Flávio Coutinho
+  SET usuarios:
+  ```
+
+
+---
+## <abbr title="Command Line Interface">CLI</abbr> do Redis (3)
 
 - **Incrementa em 1** o valor contido em uma chave
   ```
-  SET foo 10
-  INCR foo => 11
-  INCR foo => 12
-  INCR foo => 13
+  SET visitas 10
+  INCR visitas => 11
+  INCR visitas => 12
+  INCR visitas => 13
   ```
   - `INCR` é uma operação atômica
     ```
-    x = GET foo
+    x = GET visitas
     x = x + 1
-    SET foo x
+    SET visitas x
     ```
     - Estas 3 operações não são
 
@@ -246,9 +256,9 @@
 
 - Além de apenas um _key-value_: **listas**
   ```
-  LPUSH mylist a (lista possui 'a')
-  LPUSH mylist b (lista possui 'b','a')
-  LPUSH mylist c (lista possui 'c','b','a')
+  LPUSH compras leite (lista possui 'leite')
+  LPUSH compras pao   (lista possui 'pao','leite')
+  LPUSH compras aveia (lista possui 'aveia','pao','leite')
   ```
   - `LPUSH` significa _Left Push_ (adicionar ao início)
   - Também existe `RPUSH`
@@ -261,11 +271,11 @@
 
 - `LRANGE` retorna um intervalo dos elementos da lista
   ```
-  LRANGE mylist 0 1 => c,b
-  LRANGE mylist 0 -1 => c,b,a
+  LRANGE compras 0 1 => aveia,pao
+  LRANGE compras 0 -1 => aveia,pao,leite
   ```
-  - Assinatura: `LRANGE chave idx-inicial idx-final`
-  - O argumento `idx-final` pode ser negativo, sendo que -1 representa
+  - Assinatura: `LRANGE chave inicial final`
+  - O argumento `final` pode ser negativo, sendo que -1 representa
     o último elemento da lista, -2 o penúltimo etc.
 
 ---
@@ -284,12 +294,12 @@
 
 - Exemplo de uso de um conjunto:
   ```
-  SADD myset a
-  SADD myset b
-  SADD myset foo
-  SADD myset bar
-  SCARD myset => 4
-  SMEMBERS myset => bar,a,foo,b
+  SADD paises BR
+  SADD paises US
+  SADD paises CN
+  SADD paises BR
+  SCARD paises => 3
+  SMEMBERS paises => US, BR, CN
   ```
 
 ---
@@ -301,10 +311,10 @@
   prioridade ou ordem
 - Os comandos relativos a eles começam com Z. Exemplos:
   ```
-  ZADD zset 10 a
-  ZADD zset 5 b
-  ZADD zset 12.55 c
-  ZRANGE zset 0 -1 => b,a,c
+  ZADD medalhistas_ouro 7 BR
+  ZADD medalhistas_ouro 9 US
+  ZADD medalhistas_ouro 8 CN
+  ZRANGE medalhistas_ouro 0 -1 => BR, CN, US
   ```
     - Elementos são retornados na ordem de sua prioridade
 
@@ -314,8 +324,8 @@
 - Para **verificar a existência** de um elemento ou para recuperar qual
   sua prioridade, podemos usar o comando **`ZSCORE`**:
     ```
-    ZSCORE zset a => 10
-    ZSCORE zset non_existing_element => NULL
+    ZSCORE medalhistas_ouro BR => 7
+    ZSCORE medalhistas_ouro MM => NULL
     ```
 
 ---
@@ -325,8 +335,8 @@
 
 - As tabelas _hash_ são uma coleção de campos associados a valores:
     ```
-    HMSET myuser name Flávio lastname Coutinho country Brazil
-    HGET myuser lastname => Coutinho
+    HMSET admin primeiro_nome Flávio ultimo_nome Coutinho pais Brasil
+    HGET admin ultimo_nome => Coutinho
     ```
 
 ---
@@ -340,7 +350,7 @@
     - E também **quais são os tipos dos valores** que as chaves vão armazenar
 
 ---
-## Usuários
+## Usuários (1/3)
 
 - Um usuário pode ser descrito pelo seu **_username_, _userid_, _password_**, o
   conjunto de usuários que o seguem (**_followed_**), o conjunto que
@@ -352,20 +362,21 @@
     INCR next_user_id => 1000
     HMSET user:1000 username Coutinho password 1234
     ```
+    - `user:1000` é apenas uma string (não há semântica no `:`)
 
 ---
-## Usuários (2)
+## Usuários (2/3)
 
-- Além dos campos definidos, também pode ser útil recuperar o ID a
-  partir do _username_
+- Além dos campos definidos, também pode ser útil **recuperar o ID a
+  partir do _username_**
   - Se assim for, cada vez que incluirmos um usuário, também popularemos uma
-    tabela _hash_ _users_, contendo o _username_ como campo e o ID como valor
+    tabela _hash_ de _users_, contendo o _username_ como campo e o ID como valor
     ```
     HSET users Coutinho 1000
     ```
 
 ---
-## Usuários (3)
+## Usuários (3/3)
 
 - ```
   HSET users Coutinho 1000
@@ -373,7 +384,8 @@
   - Só podemos acessar dados de uma forma direta, sem índices secundários
   - Não é possível dizer ao Redis para retornar a chave associada a um valor
     - Este **novo paradigma está nos forçando** a organizar os dados de forma
-      que **tudo esteja acessível por chave primária** (em termos de RDBMSs)
+      que **tudo esteja <u>acessível por chave primária</u>** (em termos
+      de RDBMSs)
 
 ---
 ## Seguidores, Seguindo e Atualizações
@@ -382,12 +394,13 @@
 - Um usuário pode seguir outros: _following_
 - Há uma estrutura de dados perfeita para isto: o **Conjunto Ordenado**
 - Vamos definir as chaves para armazenar os **_sorted sets_**:
-  - `followers:1000`: _userids_ de todos que seguem o 1000
-  - `following:1000`: _userids_ de todos que o 1000 segue
-    - Podemos adicionar seguidores ao usuário 100 assim:
+  - `followers:1000` =&gt; _userids_ de todos que seguem o `1000`
+  - `following:1000` =&gt; _userids_ de todos que o `1000` segue
+    - Podemos adicionar seguidores ao usuário `1000` assim:
       ```
-      ZADD followers:1000 1401267618 1234
-          => Adiciona usuário 1500 no momento 1401267618
+      ZADD followers:1000 1401267618 1500
+          => Adiciona usuário 1500 no momento 1401267618,
+             que indica o momento corrente
       ```
 
 ---
@@ -395,23 +408,23 @@
 
 - Outro aspecto importante é um lugar onde podemos armazenar
   as atualizações para mostrar na página inicial do usuário
-- Vamos precisar acessar esse dado em ordem cronolágica (de postagem)
-- Basicamente, cada novo _post_ será `LPUSH`ed na chave de _posts_ do
-  usuário
+- Vamos precisar acessar esse dado em ordem cronológica (de postagem)
+- Basicamente, **cada novo _post_ será `LPUSH`_ed_ na chave de _posts_ do
+  usuário**
   ```
-  posts:1000 => lista de IDs de posts
+  posts:1000 => lista de IDs de posts do usuário 1000
   ```
   - E para recuperar as últimas atualizações e até fazer paginação, usaremos
     `LRANGE`
-    - Esta lista é a _timeline_ do usuário
+    - Esta lista é a **_timeline_ do usuário**
       - Vamos incluir os IDs de seus posts e de todos os posts criados pelos
         usuários que ele segue
 
 ---
-## Seguindo Usuários
+## Seguindo Usuários (1/2)
 
 - Precisamos criar as relações de _following_ e _follower_
-- Se o usuário ID 1000 (Coutinho) quer seguir o usuário 5000 (Santos),
+- Se o usuário ID `1000` (Coutinho) quer seguir o usuário `5000` (Santos),
   precisamos criar as duas relações
   - Podemos simplesmente adicionar entradas aos _sorted sets_:
     ```
@@ -420,7 +433,7 @@
     ```
 
 ---
-## Seguindo Usuários (2)
+## Seguindo Usuários (2/2)
 
 - Repare o mesmo padrão acontecendo novamente
 - Um banco relacional poderia armazar as duas relações em uma só tabela, com
@@ -434,12 +447,14 @@
 ---
 ## Escalando Horizontalmente
 
-- O nosso clone do Twitter é extremamente rápido, sem nenhum tipo de _cache_
-- Em um servidor lento e carregado, um _benchmark_ Apache com 100 clientes
-  paralelos fazendo 100.000 requisições mediu o **tempo médio de
+- Esse "clone" do Twitter é extremamente rápido, sem nenhum tipo de _cache_
+- Em um servidor lento e carregado, [um _benchmark_][bench] Apache com
+  100 clientes paralelos fazendo 100.000 requisições mediu o **tempo médio de
   visualização das páginas em 5ms**
   - Isto significa que podemos servir milhões de usuários todos os dias com
     apenas uma máquina Linux
+
+[bench]: http://redis.io/topics/twitter-clone
 
 ---
 ## Escalando Horizontalmente (2)
