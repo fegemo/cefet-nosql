@@ -549,7 +549,7 @@ r.table('tv_shows')
 - Para **ver um índice em ação**, podemos pedir ao MongoDB para **mostrar
   o plano de execução** usando **`cursor.explain()`**:
   ```js
-  db.inventory.find({ type: 'food'}).explain();
+  db.inventory.find({ type: 'food'}).explain(true);
   ```
 ![](../../images/mongodb-queryplan1.png)
 ![](../../images/mongodb-queryplan2.png)
@@ -587,7 +587,7 @@ r.table('tv_shows')
     - (+) Tolerância a falhas na rede (para leitura)
 
 ---
-## _Sharding_ (1)
+## _Sharding_ (1/2)
 
 - ![right](../../images/mongodb-sharding1.png)
   No MongoDB, escala-se horizontalmente **dividindo-se os dados em _shards_**
@@ -598,7 +598,7 @@ r.table('tv_shows')
   - (+) reduz a quantidade de dados em cada _shard_
 
 ---
-## _Sharding_ (2)
+## _Sharding_ (2/2)
 
 - ![right](../../images/mongodb-sharding2.png)
   **_shard_**: armazena uma parcela dos dados
