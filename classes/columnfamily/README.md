@@ -218,13 +218,13 @@
   O coordenador gerencia o _Replication Factor_ (`RF`)
   - Quantos nós devo replicar? Vai de 1 a todos
   - `RF` é uma propriedade do _keyspace_
-  - Toda escrita em cada nó tem um _timestamp_ próprio
+  - Toda <u>escrita</u> em cada nó <u>tem um _timestamp_</u> próprio
 
 ---
 ## Coordenação de Requisição
 
 - ![right](../../images/cassandra-coordinator-consistency.png)
-  O coordenador também aplica o _Consistency Level_ (`CF`)
+  O coordenador também aplica o _Consistency Level_ (`CL`)
   - **Quantos nós devem <u>confirmar</u> a leitura ou escrita**
   - `CL` pode ser diferente para cada requisição
   - Valores possíveis:
@@ -402,8 +402,8 @@
 ---
 ## Consistência **imediata** _vs_ **eventual**
 
-- Para uma requisição de leitura, qual a chance de receber
-  dados ultrapassados?
+- Para uma <u>requisição de leitura</u>, qual a chance de receber
+  dados ultrapassados (_stale data_)?
 - **Consistência imediata**: leitura sempre retorna os dados mais
   recentes
   - `CL = ALL` garante consistência imediata porque todas as
@@ -633,7 +633,7 @@
   - `SELECT, INSERT, UPDATE, DELETE`
 - Substituiu o _Thrift API_ que havia antes
 - Provê definições do _schema_ em um contexto flexível (NoSQL)
-  ```
+  ```sql
   CREATE TABLE Singer (
     name VARCHAR,
     type VARCHAR,
@@ -670,17 +670,40 @@
 ![](../../images/cql-table.png)
 
 ---
-## Chave primária, de partição e _clustering_
+## Chave primária, de partição e _clustering_ (1/2)
 
-- Chave de partição simples
+- Chave de partição simples, sem coluna _clustering_
   ```sql
-  PRIMARY KEY ( partition_key_column )
+  PRIMARY KEY ( chave_particao_coluna )
   ```
-- Chave de partição composta
+- Chave de partição composta, sem coluna _clustering_
   ```sql
-  PRIMARY KEY ( (partition_key_column1, ...2 ) )
+  PRIMARY KEY ( (chave_particao_coluna1, ...2 ) )
   ```
-- Chave de
+
+---
+## Chave primária, de partição e _clustering_ (2/2)
+
+- Chave de partição simples + colunas _clustering_
+  ```sql
+  PRIMARY KEY ( chave_particao_coluna,
+      coluna_clustering1, ..., coluna_clusteringN )
+  ```
+- Chave de partição composta + colunas _clustering_
+  ```sql
+  PRIMARY KEY ( ( chave_particao_coluna1, ...coluna2 ),
+      coluna_clustering1, ..., coluna_clusteringN )
+  ```
+
+---
+## Exemplo
+
+<ul class="multi-column-list-2">
+  <li>Permite achar todos os albums e bandas a partir de um nome de música</li>
+  <li>Permite achar banda, gênero e músicas para um (álbum/ano)</li>
+</ul>
+![](../../images/cql-partition-keys.png)
+
 ---
 <!--
   backdrop: chapter
