@@ -156,19 +156,6 @@ body {
   height: 100%;
   overflow: hidden;
 }
-body .bespoke-slide,
-.bespoke-parent.transition-fade .bespoke-slide {
-  transition: opacity 0.5s ease;
-  transform: initial;
-  transform-origin: initial;
-  perspective: initial;
-  transform-style: initial;
-  opacity: 1;
-}
-body .bespoke-inactive,
-.bespoke-parent.transition-fade .bespoke-inactive {
-  opacity: 0;
-}
 .bespoke-slide img.full-width {
   width: 100%;
 }
