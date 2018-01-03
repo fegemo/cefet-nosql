@@ -145,10 +145,16 @@ Valendo 15% extra, tente fazer também as seguintes operações:
   <!--
   db.restaurants.aggregate([
     {
+        $match: { borough: 'Brooklyn' }
+    },
+    {
         $group: {
-            _id: '$borough',
+            _id: '$cuisine',
             qtde: { $sum: 1 }
         }
+    },
+    {
+        $sort: { qtde: -1 }
     }
   ]);
   -->
